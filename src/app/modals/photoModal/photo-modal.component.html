@@ -1,0 +1,54 @@
+<div fxLayout="column" class="patients-box">
+  <div fxLayout="column" fxLayoutAlign="start stretch" class="modal-content" style="height: 100%;">
+    <span class="title">Cámara</span>
+    <div fxLayout="column" fxFlex fxLayoutAlign="start stretch">
+        <!-- <perfect-scrollbar style="max-height: 476px;"> -->
+            <div style="text-align:center">
+                <div>
+                    <!-- <webcam [height]="400" [width]="400" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+                    *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+                    [videoOptions]="videoOptions" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)"
+                    (initError)="handleInitError($event)"></webcam> -->
+                    <br />
+                    <div *ngIf="!showWebcam" fxLayout="row" fxLayoutAlign="center center" class="modal-patient-image">
+                        <img [src]="currentPatientPicture && currentPatientPicture != '' ? currentPatientPicture : '/assets/images/default-patient.jpg'" alt="">
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center center" [hidden]="showWebcam" class="mt-12">
+                        <button mat-flat-button color="primary" (click)="toggleWebcam();" [disabled]="sending">ABRIR CÁMARA</button>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center center" [hidden]="!showWebcam" class="mt-12">
+                        <button mat-flat-button (click)="toggleWebcam();">CERRAR CÁMARA</button>
+                        <button mat-flat-button color="primary" (click)="triggerSnapshot();">TOMAR FOTO</button>
+                    </div>
+                    <!-- <button class="actionBtn" (click)="toggleWebcam();">Toggle Webcam</button>
+                    <br /> -->
+                    <!-- <button class="actionBtn" (click)="showNextWebcam(true);" [disabled]="!multipleWebcamsAvailable">Next
+                    Webcam</button> -->
+                    <!-- <input id="cameraSwitchCheckbox" type="checkbox" [(ngModel)]="allowCameraSwitch"><label
+                    for="cameraSwitchCheckbox">Allow Camera Switch</label> -->
+                    <!-- <br />
+                    DeviceId: <input id="deviceId" type="text" [(ngModel)]="deviceId" style="width: 500px">
+                    <button (click)="showNextWebcam(deviceId);">Activate</button>
+                </div> -->
+                </div>
+        
+            <!-- <div class="snapshot" *ngIf="webcamImage">
+                <img [src]="webcamImage.imageAsDataUrl" />
+            </div> -->
+        
+            <!-- <h4 *ngIf="errors.length > 0">Messages:</h4>
+            <ul *ngFor="let error of errors">
+            <li>{{error | json}}</li>
+            </ul> -->
+        </div>
+      <!-- </perfect-scrollbar> -->
+    </div>
+  <div class="options" style="flex:0;">
+    <button mat-button (click)="close()">CANCELAR</button>
+    <button mat-flat-button color="primary" class="new" (click)="save()"
+      [disabled]="sending">
+      <span *ngIf="!sending">GUARDAR</span>
+      <mat-spinner diameter="24" *ngIf="sending" class="white"></mat-spinner>
+    </button>
+  </div>
+</div>

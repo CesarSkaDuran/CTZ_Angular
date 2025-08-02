@@ -1,0 +1,17 @@
+<section>
+
+    <div class="cont-img">
+        <img *ngIf="img_previsualizada" [src]="img_previsualizada" alt="imagen">
+        <img *ngIf="!img_previsualizada" src="/assets/images/default_perfil.jpg" alt="imagen">
+    </div>
+
+    <div class="cont-cuerpo">
+        <div>
+            <input (change)="detectarCambio($event)" type="file">
+        </div>
+        <div style="padding-top: 20px; float: right;">
+            <button *ngIf="!img_previsualizada" style="opacity: .2;" class="btn btn-azul">GUARDAR</button>
+            <button (click)="subirImagen()" *ngIf="img_previsualizada" class="btn btn-azul">GUARDAR</button>
+        </div>
+    </div>
+</section>

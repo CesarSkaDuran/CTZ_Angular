@@ -1,0 +1,45 @@
+<div class="container" *ngFor="let data of tableData; let i = index">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+        <h2 >Seleccionar forma de pago</h2>
+    </div>
+    <br>
+        <br>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Valor</h3>
+        <h3 style="color: grey;">{{data.value | currency}}</h3>
+    </div>
+    <br>
+    <form class="example-form" [formGroup]="pagosForm">
+     <div class="container row" fxLayoutAlign="space-between center">
+          <h3>Formas de Pago</h3>
+     <mat-form-field style="width: 50%;" appearance="outline" class="mb-4 bold-form" floatLabel="always">
+         <mat-label>Formas de pago</mat-label>
+         <mat-select formControlName="payment_type" required>
+             <mat-option value="1">Efecty/Baloto/SURED</mat-option>
+             <mat-option value="4">Consignacion/Transferencia</mat-option>
+             <mat-option value="5">Pagar en el Consultorio</mat-option>
+         </mat-select>
+     </mat-form-field>
+    </div>
+    <br>
+    <br>
+    <div class="container P-10 row" fxLayoutAlign="space-between center">
+        <button (click)="close()" style="border-radius: 10px;text-align: center;background: rgb(140, 0, 255); width:45%"
+            mat-icon-button type=" button">
+            <p style=" font-weight: bold;color: white;">
+                CANCELAR
+            </p>
+        </button>
+
+        <button (click)="save()" [disabled]="sending || !pagosForm.valid"
+            style="border-radius: 10px;text-align: center;background: rgb(140, 0, 255); width:45%"
+            mat-icon-button type=" button">
+            <p style=" font-weight: bold;color: white;">
+                CONTINUAR
+            </p>
+        </button>
+    </div>
+</form>
+     
+</div>
+

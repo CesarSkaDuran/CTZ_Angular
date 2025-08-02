@@ -1,0 +1,43 @@
+<section style="display: flex; flex-direction: column;">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+        <h2 mat-dialog-title class="title text-black-600">Bloquear creación de pedidos diarios</h2>
+    </div>
+    
+      <!--<button mat-stroked-button (click)="openNewPatient()" color="primary" class="mt-1" [hidden]="showOnlyName">Nuevo Paciente</button>-->
+    <mat-dialog-content style="display: flex; flex-direction: column;">
+        <form fxLayout="column" fxLayout.gt-xs="row" fxFlex.gt-xs [formGroup]="diaFiltros">
+            <div fxLayout="column" fxFlex.gt-xs class="p-3">
+                <div fxLayout="column" fxFlex.gt-xs class="p-3">
+                    <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always">
+                        <mat-label>Fecha</mat-label>
+                            <input matInput [matDatepicker]="datePicker" formControlName="fecha" placeholder="Seleccione" autocomplete="off"
+                        required />
+                        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datePicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="row" fxFlex.gt-xs class="p-3">
+                    <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always">
+                        <mat-label>Hora inicio</mat-label>
+                            <input matInput type="time" formControlName="hora_inicio" placeholder="Seleccione" autocomplete="off"
+                        required />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always">
+                        <mat-label>Hora fin</mat-label>
+                            <input matInput type="time" formControlName="hora_fin" placeholder="Seleccione" autocomplete="off"
+                        required />
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </form>
+         
+        <div class="cont-btns">
+            <button mat-button (click)="close()">Cancelar</button> 
+            <button mat-button color="primary" (click)="save()" >Guardar</button>
+        </div>
+    
+     </mat-dialog-content>
+</section>

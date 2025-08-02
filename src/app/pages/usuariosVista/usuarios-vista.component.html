@@ -1,0 +1,190 @@
+<!--[ngStyle]="{'display': getRoleId() != '1' ? 'none' : 'flex'  }"-->
+<!--
+<section class="cont-vista">
+
+    <div class="cont-titulo-vista">
+        <h1>Usuarios</h1>
+        <div style="vertical-align: middle;">
+            <button class="btn-redondo btn-azul" (click)="registrarUsuarioModal()">NUEVO<ic-icon [icon]="plusCircle" inline="true" size="24px" class=""></ic-icon></button>
+        </div>
+    </div>
+
+    <div class="white-card">
+
+        <form >
+            <div class="cont-filtro">
+                <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 1">
+                    <mat-label>Fecha inicial</mat-label>
+                    <mat-select  placeholder="..." #singleSelect>
+                      <mat-option>
+                        Cúcuta
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 1">
+                    <mat-label>Fecha final</mat-label>
+                    <mat-select  placeholder="..." #singleSelect>
+                      <mat-option>
+                        Cúcuta
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 1">
+                    <mat-label>Placa</mat-label>
+                    <mat-select  placeholder="..." #singleSelect>
+                      <mat-option>
+                        Cúcuta
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 1">
+                    <mat-label>Cliente</mat-label>
+                    <mat-select  placeholder="..." #singleSelect>
+                      <mat-option>
+                        Cúcuta
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+          </div>
+        </form>
+
+
+        <div class="cont-tabla">
+            <table mat-table [dataSource]="dataUser" class="tabla-100">
+
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Id </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+
+              
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Nombre </th>
+                  <td mat-cell *matCellDef="let element">{{element.name}}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: center !important;">Correo</th>
+                  <td mat-cell *matCellDef="let element">{{element.email}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="role">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center !important;">Rol</th>
+                    <td mat-cell *matCellDef="let element">{{element.role_id}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Acciones </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button (click)="registrarUsuarioModal(element.id)" style="padding: 10px 10px;"><mat-icon class="c-azul" [icIcon]="edit"></mat-icon></button>
+                        <button (click)="borrarUser(element.id)"><ic-icon [icon]="baselineDeleteForever" inline="true" size="24px" class="c-rojo"></ic-icon></button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              
+        </div>
+
+        
+    </div>
+
+</section>
+-->
+
+
+<section @stagger [ngStyle]="{'display': verUsuariosPermiso() == 1 ?  'initial' : verUsuariosPermiso() == 2 ? 'none' : '' }">
+  <div fxLayout="column">
+
+      <div class="card overflow-auto mt-5 "
+          style="box-shadow: var(--elevation-z0);border: 0px solid rgba(0, 0, 0, 0.125);">
+          <div fxLayout="row" fxFlex fxLayoutAlign="center stretch" fxLayoutGap="8px"
+               class="p-6 mt-6" style="border-radius: 4px;position:relative;"><!--[ngClass]="{'hidden': !alertIsVisible}"-->
+
+              <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="end" fxLayoutAlign.sm="end end"
+                  fxItemAlign="end" fxItemAlign.xs="end" fxLayoutGap="50px" fxLayoutGap.xs="50px"
+                  ><!--[formGroup]="filters"-->
+                  <button [ngStyle]="{'display': editarUsuariosPermiso() == 1 ?  'inherit' : editarUsuariosPermiso() == 2 ? 'none' : '' }" mat-flat-button color="primary" (click)="registrarUsuarioModal()" class="celda_bt buttom_1">Agregar Usuario</button>
+              </form><!--[ngStyle]="{'display': userPermisoStatus() == 2 ?'none' :  userPermisoStatus() == 0 ? 'none' : '' }"-->
+          </div>
+
+
+      </div>
+
+        <div>
+
+          
+      <div fxLayout="row" fxflex class="p-4 table-controls" fxLayoutGap="8px">
+        <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+            fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+            fxLayoutGap.xs="12px" [formGroup]="filters">
+
+            <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;" class="bold-form"
+                floatLabel="always">
+                <mat-label>Cliente</mat-label>
+                <input matInput (keyup)="searchKeyUp($event)" #search placeholder="Nombre del  Cliente..."
+                    formControlName="search" />
+            </mat-form-field>
+        </form>
+    </div>
+
+          <table @stagger [dataSource]="dataUser" class="w-full"  mat-table
+              matSort>
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> Id </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element"><p class="cortar_1">{{element.name}}</p></td>
+              </ng-container>
+
+              <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Correo</th>
+                  <td mat-cell *matCellDef="let element"><p class="cortar_1">{{element.email}}</p></td>
+            </ng-container>
+
+            <ng-container matColumnDef="bloqueo">
+              <th mat-header-cell *matHeaderCellDef>Bloqueo</th>
+              <td mat-cell *matCellDef="let element">{{element.bloqueado?'Activado':'Desactivado'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="role">
+              <th mat-header-cell *matHeaderCellDef>Rol</th>
+              <td mat-cell *matCellDef="let element">{{element.role ? element.role.role : '---'}}</td>
+            </ng-container>
+              
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let element">
+                    <button [ngStyle]="{'display': editarUsuariosPermiso() == 1 ?  'inherit' : editarUsuariosPermiso() == 2 ? 'none' : '' }" (click)="registrarUsuarioModal(element.id)" style="padding: 10px 10px;"><mat-icon class="c-azul" [icIcon]="edit"></mat-icon></button>
+                    <button [ngStyle]="{'display': editarUsuariosPermiso() == 1 ?  'inherit' : editarUsuariosPermiso() == 2 ? 'none' : '' }" (click)="borrarUser(element.id)"><ic-icon [icon]="baselineDeleteForever" inline="true" size="24px" class="c-rojo"></ic-icon></button>
+
+                    <button [ngStyle]="{'display': editarUsuariosPermiso() == 2 ?  'inherit' : editarUsuariosPermiso() == 1 ? 'none' : '' }" style="padding: 10px 10px; opacity: .2;"><mat-icon class="c-azul" [icIcon]="edit"></mat-icon></button>
+                    <button [ngStyle]="{'display': editarUsuariosPermiso() == 2 ?  'inherit' : editarUsuariosPermiso() == 1 ? 'none' : '' }" style="opacity: .2;" ><ic-icon [icon]="baselineDeleteForever" inline="true" size="24px" class="c-rojo"></ic-icon></button>
+                
+                
+                    <button style="padding: 10px 10px;" (click)="detalleUsuarioModal(element.id, element.photo, element.name)" ><mat-icon class="c-azul" [icIcon]="cam"></mat-icon></button>
+
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+
+        </div>
+      
+      <!--
+      <mat-paginator [length]="resultsLength" [pageSizeOptions]="pageSizeOptions"
+          [pageSize]="pageSize" class="sticky left-0">
+      </mat-paginator>
+      -->
+      
+    </div>
+</section>

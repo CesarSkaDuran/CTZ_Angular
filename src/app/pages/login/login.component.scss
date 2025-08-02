@@ -1,0 +1,15 @@
+.company-caption {
+    text-decoration: none;
+    opacity: 0.7;
+}
+@media (max-width: 768px) {
+    .none_cell {
+      display: none !important;
+    }
+
+    .cell_1 {
+      height: 700px;
+      width: 100%;
+      margin: -22px !important;
+    }
+}

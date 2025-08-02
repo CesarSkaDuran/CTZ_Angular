@@ -1,0 +1,30 @@
+
+
+<section class="cont-modal">
+    <div>
+        <div class="titulo-modal">
+            <h1 style="flex-grow: 1;">Editar Contraseña</h1><!--{{vehiculo_id}}-->
+        </div>
+
+        <div>
+            <div class="advertencia">
+                <p>No olvide su nueva contraseña para que pueda acceder al sistema</p>
+            </div>
+            
+            <form [formGroup]="contraseniaFormGroup">
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                      <mat-label>Nueva contraseña</mat-label>
+                      <input matInput type="password" placeholder="..." formControlName="password" />
+                    </mat-form-field>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="cont-btns-modal">
+        <button class="btn btn-azul" (click)="saveUser()">Guardar</button><!--(click)="guardarCambios()"-->
+    </div>
+
+</section>

@@ -1,0 +1,67 @@
+
+
+<section class="cont-modal">
+    <div>
+        <div class="titulo-modal">
+            <h1 style="flex-grow: 1;">Crear Usuario</h1>
+
+            <span>
+                <button class="btn btn-azul">Crear contraseña---</button>
+            </span>
+        </div>
+
+        <div>
+            
+            <form [formGroup]="usuarioFormGroup">
+
+  
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                      <mat-label>Nombre</mat-label>
+                      <input matInput type="text" placeholder="..." formControlName="name" /><!--[(ngModel)]="nombre"-->
+                    </mat-form-field>
+                </div>
+
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Correo</mat-label>
+                        <input matInput type="text" placeholder="..." formControlName="email" /><!--[(ngModel)]="email"-->
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 1">
+                        <mat-label>Rol</mat-label>
+                        <mat-select placeholder="..." formControlName="role_id" #singleSelect ><!--[(ngModel)]="role_id"-->
+                            <mat-option [value]="1" >
+                                Superadmin
+                              </mat-option>
+                              <mat-option [value]="2" >
+                                Admin
+                              </mat-option>
+                              <mat-option [value]="3" >
+                                Ingresos
+                              </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="subtitulo">
+                    <h2 style="flex-grow: 1;">Crear Contraseña</h2>
+                </div>
+
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput type="password" placeholder="..." formControlName="password" /><!--[(ngModel)]="email"-->
+                    </mat-form-field>
+                </div>
+
+                </form>
+            
+        </div>
+    </div>
+
+    <div class="cont-btns-modal">
+        <button class="btn btn-azul" (click)="saveUsuario()" >Guardar</button><!--(click)="guardarCambios()"-->
+    </div>
+
+</section>

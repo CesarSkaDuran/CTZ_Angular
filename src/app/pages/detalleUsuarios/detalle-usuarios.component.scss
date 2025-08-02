@@ -1,0 +1,72 @@
+.cont-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.cont-img-perfil{
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    background-color: #fff;
+    box-shadow: 1px 0px 14px 4px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 1px 0px 14px 4px rgba(0,0,0,0.1);
+    -moz-box-shadow: 1px 0px 14px 4px rgba(0,0,0,0.1);
+    border: solid 5px #fff;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+
+.cont-img-perfil img{
+    width: 600%;
+    height: auto;
+    display: block;
+}
+
+.cont-logo h1{
+    margin-top: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    opacity: .7;
+}
+
+.cont-logo .correo{
+    font-size: 18px;
+    opacity: .7;
+}
+
+.cont-logo .rol{
+    font-size: 20px;
+    opacity: .7;
+}
+
+.agregar{
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    bottom: -1px;
+    left: 0px;
+    background-color: #fff;
+    color: #000;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(20%);
+    transition: opacity ease .5s;
+    transition: transform ease .5s;
+}
+
+.cont-img-perfil:hover .agregar{
+    opacity: .3;
+    transform: translateY(0);
+}
+
+.cont-img-perfil:hover img{
+    transform: scale(1.5);
+    transition: transform ease .5s;
+}
+

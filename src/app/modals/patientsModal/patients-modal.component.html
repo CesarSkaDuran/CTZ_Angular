@@ -1,0 +1,37 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Seleccionar Paciente</h2>
+  <mat-form-field appearance="outline" class="blue m-t-18" floatLabel="always" fxFlex="auto">
+    <mat-label>Nombre del paciente</mat-label>
+    <input matInput placeholder="Buscar..." (keyup)="searchPatientKeyUp($event)" (keyup.enter)="onSearchEnter()"
+      (keyup.arrowDown)="selectNextPatient()" (keyup.arrowUp)="selectPreviousPatient()"
+      (keyup.shift.n)="openNewPatient()" type="text" [(ngModel)]="searchText" autocomplete="off" />
+  </mat-form-field>
+  <span class="subheading">Resultados</span>
+</div>
+<mat-dialog-content style="height: 322px;">
+  <mat-action-list>
+    <!-- <perfect-scrollbar style="max-height: 312px;"> -->
+    <div class="content" [hidden]="loading || patients.length == 0">
+      <mat-list-item domChange *ngFor="let patient of patients" [class.preselected]="patient == preselectedPatient"
+        (click)="selectPatient(patient)" (domChange)="onDomChange($event)" class="list-patient">
+        <img matListAvatar src="./assets/images/default-patient.png" alt="patient" />
+        <h4 mat-line>{{ patient.name }}</h4>
+        <p mat-line class="caption text-grey-500">
+          {{ patient.identity }} <span>{{ patient.last_consultation }}</span>
+        </p>
+      </mat-list-item>
+    </div>
+    <div [hidden]="loading || patients.length > 0" class="empty-patients">
+      No coincide ningún resultado<br />Cambia la consulta o crea un nuevo paciente
+    </div>
+    <!-- </perfect-scrollbar> -->
+
+    <div class="loading" *ngIf="loading">
+      <mat-spinner diameter="24" color="primary"></mat-spinner>
+    </div>
+  </mat-action-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-flat-button (click)="openNewPatient()" color="primary">Nuevo paciente</button>
+</mat-dialog-actions>

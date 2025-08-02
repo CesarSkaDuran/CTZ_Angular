@@ -1,0 +1,72 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Información del Control</h2>
+</div>
+<mat-dialog-content style="height: 418px;">
+  <form class="form-container" [formGroup]="control" *ngIf="!sended">
+    <!-- <perfect-scrollbar fxLayout="column" style="max-height: 428px;padding: 0 18px;"> -->
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue" floatLabel="always">
+          <mat-label>Fecha</mat-label>
+          <input
+            matInput
+            [matDatepicker]="datePicker"
+            formControlName="date"
+            placeholder="Seleccione"
+            autocomplete="off"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue " floatLabel="always">
+          <mat-label>Semana</mat-label>
+          <input matInput placeholder="..." formControlName="week" autocomplete="off" required />
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue" floatLabel="always">
+          <mat-label>Peso</mat-label>
+          <input matInput placeholder="..." formControlName="weight" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue " floatLabel="always">
+          <mat-label>T.</mat-label>
+          <input matInput placeholder="..." formControlName="control_t" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue " floatLabel="always">
+          <mat-label>A.</mat-label>
+          <input matInput placeholder="..." formControlName="control_a" autocomplete="off" />
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue" floatLabel="always">
+          <mat-label>Presión</mat-label>
+          <input matInput placeholder="..." formControlName="pression" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue " floatLabel="always">
+          <mat-label>A.U.</mat-label>
+          <input matInput placeholder="..." formControlName="control_au" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue " floatLabel="always">
+          <mat-label>F.C.F</mat-label>
+          <input matInput placeholder="..." formControlName="fcf" autocomplete="off" />
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+        <mat-form-field appearance="legacy" fxFlex.gt-xs class="blue" floatLabel="always">
+          <mat-label>Edema</mat-label>
+          <input matInput placeholder="..." formControlName="edema" autocomplete="off" />
+        </mat-form-field>
+        <div fxFlex.gt-xs class=""></div>
+        <div fxFlex.gt-xs class=""></div>
+        <div fxFlex.gt-xs class=""></div>
+      </div>
+    <!-- </perfect-scrollbar> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+    <button mat-flat-button color="primary" class="new" [disabled]="sending || !control.valid" (click)="create()">
+      <span *ngIf="!sending">Guardar</span>
+      <mat-spinner diameter="24" *ngIf="sending" class="white"></mat-spinner>
+    </button>
+</mat-dialog-actions>

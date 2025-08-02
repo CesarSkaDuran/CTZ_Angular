@@ -1,0 +1,129 @@
+<div @stagger>
+
+
+
+  <div class="card overflow-auto mt-5">
+    
+
+    <div fxLayout="row" fxflex class="p-4 table-controls" fxLayoutGap="8px">
+      <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+          fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+          fxLayoutGap.xs="12px" [formGroup]="filters" style="width: 100%;">
+
+          <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;" class="bold-form"
+              floatLabel="always">
+              <mat-label>Cliente</mat-label>
+              <input matInput (keyup)="searchKeyUp($event)" #search placeholder="Nombre del  Cliente..."
+                  formControlName="search" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;"
+              class="bold-form " floatLabel="always">
+              <mat-label>Fecha Inicial</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha"
+                  autocomplete="off" (dateChange)="dateChange($event)" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;"
+              class="blue no-pad bold-form" floatLabel="always">
+              <mat-label>Fecha Final</mat-label>
+              <input matInput [matDatepicker]="picker2" formControlName="date2" placeholder="Rango de fecha"
+                  autocomplete="off" (dateChange)="dateChange($event)" />
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+      </form>
+  </div>
+
+
+
+
+  </div>
+
+
+
+  <div class="w-full cont-table">
+          <table  mat-table
+          matSort [dataSource]="dataSource"><!--@stagger-->
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>  </th>
+            <td mat-cell *matCellDef="let element">{{element.id}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cliente">
+            <th mat-header-cell *matHeaderCellDef> Cliente </th>
+            <td mat-cell *matCellDef="let element">{{element.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha_despacho">
+            <th mat-header-cell *matHeaderCellDef> Fecha de despacho </th>
+            <td mat-cell *matCellDef="let element"><p class="cortar_1">{{element.date}}</p></td>
+          </ng-container>
+
+
+        <ng-container matColumnDef="hora_cargue">
+          <th mat-header-cell *matHeaderCellDef>Hora de cargue</th>
+          <td mat-cell *matCellDef="let element">{{element.time}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="observaciones">
+          <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+          <td mat-cell *matCellDef="let element">{{element.observaciones}}</td>
+        </ng-container>
+          
+        <ng-container matColumnDef="direccion">
+          <th mat-header-cell *matHeaderCellDef> Dirección </th>
+          <td mat-cell *matCellDef="let element">{{element.direccion}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha_pago">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dias pago</th>
+          <td mat-cell *matCellDef="let row" class="pl-0 text-secondary">
+              {{row.fecha_pago ? getDias(row.fecha_pago) : '---'}} Dias
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="descarga">
+            <th mat-header-cell *matHeaderCellDef> Descarga </th>
+            <td mat-cell *matCellDef="let element">{{element.tipo_descarga}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="concreto">
+            <th mat-header-cell *matHeaderCellDef> Concreto </th>
+            <td mat-cell *matCellDef="let element">{{element.type_concreto}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="vendedor">
+            <th mat-header-cell *matHeaderCellDef> Vendedor </th>
+            <td mat-cell *matCellDef="let element">{{element.vendedor}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let element">
+              <button (click)="save(element.id, element.aprobado)">
+                <mat-icon *ngIf="element.aprobado==1" [icIcon]="square" color="red"></mat-icon>
+              </button>
+              <button (click)="save(element.id, element.aprobado)" *ngIf="element.aprobado==2">
+                <mat-icon [icIcon]="check" color="green"></mat-icon>
+              </button>
+
+              <button (click)="openAppointmentDetail(element)" mat-icon-button type=" button">
+                <mat-icon [icIcon]="baselineOpenInNew" color="primary"></mat-icon>
+              </button>
+
+              <button mat-icon-button type="button" (click)="delete(element)">
+                <mat-icon [icIcon]="baselineDeleteForever" color="red"></mat-icon>
+              </button>
+
+            </td>
+        </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+  </div>
+
+</div>

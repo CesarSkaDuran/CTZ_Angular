@@ -1,0 +1,73 @@
+<section @stagger >
+
+
+
+  <form class="formulario" [formGroup]="encabezadoForm" >
+      <mat-checkbox class="example-margin" formControlName="encabezado">Ocultar encabezado</mat-checkbox>
+  </form>
+
+
+
+
+  <div style="display: flex;flex-direction: column; justify-content: flex-start;" >
+
+    <div class="cabecera" [hidden]="isChecked">
+      <div style="text-align: center;"><img class="select-none" src="assets/img/logo-sm.png"></div>
+      <div style="text-align: center;">
+        <h2>Concretos y Triturados El Zulia</h2>
+        <h2 style="font-size: 14px;">NIT: <span style="font-weight: normal;">900281799-5</span></h2>
+        <h2 style="font-size: 14px;">Dirección: <span style="font-weight: normal;">KM 9 Sector El Zulia La Esperanza</span></h2>
+      </div>
+      <div>
+        <h2>Recibo N°: {{id_pago}}</h2>
+        <h2>Fecha: {{fecha_pago}}</h2>
+        <h2>Pedido N°: {{pedido_id}}</h2>
+      </div>
+    </div>
+
+    <table style="width: 100%;">
+      <tr>
+        <th>Cliente:</th>
+        <td>{{nombre_cliente}}</td>
+        <th>NIT:</th>
+        <td>{{nit_cliente}}</td>
+      </tr>
+      <tr>
+        <th>Valor pedido:</th>
+        <td>${{transform(valor_credito)}}</td>
+        <th>Fecha pedido:</th>
+        <td>{{fecha_credito}}</td>
+      </tr>
+    </table>
+
+    <table style="margin-top: 15px;" class="tabla-pago">
+      <tr>
+        <th>Valor Abono</th>
+        <th>Forma de pago</th>
+        <th>Total abonos</th>
+        <th>Saldo actual</th>
+        <th>Observación</th>
+      </tr>
+      <tr>
+        <td>${{transform(valor_pago)}}</td>
+        <td>{{banco_id_pago == 1 ? "Bancolombia" : banco_id_pago == 2 ? "Davivienda":"---"}}</td>
+        <td>${{transform(total_abonos)}}</td>
+        <td>${{transform(valor_credito-total_abonos)}}</td>
+        <td>{{observacion}}</td>
+      </tr>
+    </table>
+  
+    <div style="width: 300px; margin: 50px auto; text-align: center;">
+        <hr>
+        <span>
+            Firma recibido
+        </span>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button class="btn-imprimir" style="background-color: #383838;color: #fff; padding: 10px 20px;border-radius: 5px;" (click)="imprimir()">Imprimir</button>
+      <button class="btn-imprimir" (click)="volverPagos()" style="margin-left: 5px; background-color: #383838;color: #fff; padding: 10px 20px;border-radius: 5px;">Volver</button>
+    </div>
+
+  </div>
+</section>

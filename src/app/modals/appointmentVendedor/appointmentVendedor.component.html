@@ -1,0 +1,186 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 [hidden]="showOnlyName" mat-dialog-title class="title text-black-600">Nuevo Pedido</h2>
+    <h2 [hidden]="!showOnlyName" mat-dialog-title class="title text-black-600">Datos del pedido</h2>
+</div>
+<mat-dialog-content>
+    <form fxLayout="column" fxLayout.gt-xs="row" fxFlex.gt-xs [formGroup]="obs">
+        <div fxLayout="column" fxFlex.gt-xs class="p-3">
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap;" [hidden]="showOnlyName">
+                <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" [hidden]="showOnlyName"
+                    style="flex-grow: 2;">
+                    <mat-label>Cliente</mat-label>
+                    <mat-select formControlName="cliente" placeholder="..." #singleSelect>
+                        <mat-option>
+                            <ngx-mat-select-search style="display: none;" [formControl]="patientFilterCtrl">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let cliente of filteredclientes | async" [value]="cliente">
+                            {{cliente.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-mini-fab style="margin: 0px 10px" (click)="openUserAddModal()" [hidden]="showOnlyName"
+                    class="mb-4">+</button>
+                <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2;">
+                    <mat-label>Tipo concreto</mat-label>
+                    <mat-select formControlName="type_concreto" placeholder="..." #singleSelect>
+                        <mat-option>
+                            <ngx-mat-select-search style="display: none;" [formControl]="productoFilterCtrl">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let patient of filteredproducto | async" [value]="patient">
+                            {{patient?.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-mini-fab style="margin: 0px 10px" (click)="openNewProductot()" [hidden]="showOnlyName"
+                    class="mb-4">+</button>
+            </div>
+            <mat-label [hidden]="!showOnlyName" style="color: gray; font-size: 12px; ">Cliente</mat-label>
+            <div class="row" style="display: flex;" *ngFor="let data of tableData; let i = index"
+                [hidden]="!showOnlyName">
+                <h3>{{data?.name}}</h3>
+                <button mat-mini-fab style="margin: 0px 10px" (click)="selectNewPatient(data)" [hidden]="!showOnlyName"
+                    class="mb-4">+</button>
+            </div>
+            <br>
+
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always"
+                style="flex-grow: 2;">
+                <mat-label>Metros 3</mat-label>
+                <input matInput type="number" placeholder="..." formControlName="metros" required />
+            </mat-form-field>
+
+            <!--
+        <button mat-stroked-button (click)="openNewPatient()" color="primary" class="mt-1" [hidden]="showOnlyName">Nuevo Paciente</button>
+      -->
+
+            <mat-label [hidden]="!showOnlyName" style="color: gray; font-size: 12px;">Tipo de concreto</mat-label>
+            <div class="row" style="display: flex;" *ngFor="let data of tableData; let i = index"
+                [hidden]="!showOnlyName">
+                <h3>{{data?.type_concreto}}</h3>
+                <button mat-mini-fab style="margin: 0px 10px" (click)="selectNewProducto(data)" [hidden]="!showOnlyName"
+                    class="mb-4">+</button>
+            </div>
+
+            <mat-label  [hidden]="!showOnlyName" style="color: gray; font-size: 12px;">Vendedor</mat-label>
+            <div class="row" style="display: flex;" *ngFor="let data of tableData; let i = index"
+                [hidden]="!showOnlyName">
+                <h3>{{data?.vendedor}}</h3>
+                <button [ngStyle]="{'display': userPermisoStatus() == 2 ?  'none' : userPermisoStatus() }" mat-mini-fab
+                    style="margin: 0px 10px" (click)="selectNewVendedor(data)" [hidden]="!showOnlyName"
+                    class="mb-4">+</button>
+            </div>
+            <br>
+
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always"
+                style="flex-grow: 2;">
+                <mat-label>Direccion entrega</mat-label>
+                <input matInput placeholder="..." formControlName="direccion" required />
+            </mat-form-field>
+
+        
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always"
+                style="flex-grow: 2;">
+                <mat-label>Observaciones</mat-label>
+                <input matInput placeholder="..." formControlName="observaciones" />
+            </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex.gt-xs class="p-3" style="padding-top: 26px;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+                <mat-label>Fecha</mat-label>
+                <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Seleccione"
+                    autocomplete="off" required />
+                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                <mat-datepicker #datePicker></mat-datepicker>
+            </mat-form-field>
+
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+                    <mat-label>Hora en cargue</mat-label>
+                    <input matInput type="time" placeholder="..." formControlName="time" />
+                </mat-form-field>
+            </div>
+
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+                    <mat-label>Hora en obra</mat-label>
+                    <input matInput type="time" placeholder="..." formControlName="end_time" />
+                </mat-form-field>
+            </div>
+
+            <div [ngStyle]="{'display': userPermisoStatus() == 2 ?  'none' : userPermisoStatus() }"
+                style="display: flex; flex-direction: row; flex-wrap: wrap;">
+
+                <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2;">
+                    <mat-label>Vendedor</mat-label>
+                    <mat-select formControlName="vendedor" placeholder="..." #singleSelect>
+                        <mat-option>
+                            <ngx-mat-select-search style="display: none;" [formControl]="patient1FilterCtrl">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let patient of filteredPatients | async" [value]="patient">
+                            {{patient.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button [hidden]="showOnlyName" (click)="openNewPatient()" mat-mini-fab
+                    style="margin: 0px 10px">+</button>
+            </div>
+
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                    <mat-label>Conductor</mat-label>
+                    <mat-select formControlName="conductor" placeholder="..." #singleSelect>
+                        <mat-option>
+                            <ngx-mat-select-search style="display: none;" [formControl]="conductorFilterCtrl">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let patient of filteredconductor | async" [value]="patient">
+                            {{patient.name }} | {{patient.placa}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
+                <button [ngStyle]="{'display': userPermisoStatus() == 2 ?  'none' : userPermisoStatus() }"
+                    [hidden]="showOnlyName" (click)="crearConductor()" mat-mini-fab
+                    style="margin: 0px 10px">+</button>
+            </div>
+                <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                    <mat-label>Tipo de descargar </mat-label>
+                    <mat-select placeholder="Selecciona" formControlName="tipo_descarga">
+                        <mat-option value="Directa">Directa</mat-option>
+                        <mat-option value="SP 500">SP 500</mat-option>
+                        <mat-option value="SP 750">SP 750</mat-option>
+                        <mat-option value="Autobomba 1">Autobomba 1</mat-option>
+                        <mat-option value="Autobomba 2">Autobomba 2</mat-option>
+                        <mat-option value="Reeds A40">Reeds A40</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            <mat-form-field [ngStyle]="{'display': userPermisoStatus() == 2 ?  'none' : userPermisoStatus() }"
+                appearance="outline" class="mb-4 bold-form" floatLabel="always">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="status" required>
+                    <mat-option value="2">Revision</mat-option>
+                    <mat-option value="1">Programado</mat-option>
+                    <mat-option value="3">Despachado</mat-option>
+                    <mat-option value="4">Cancelada</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="cont-btns">
+    <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+    <button mat-flat-button (click)="save()" [disabled]="sending || !obs.valid" color="primary">
+        <span *ngIf="!sending">Guardar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+    </button>
+</mat-dialog-actions>
+
+<div>
+
+</div>

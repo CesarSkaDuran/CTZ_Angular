@@ -1,0 +1,133 @@
+<!-- <mat-tab label="HISTORIA">
+    <ng-template matTabContent>
+        <div fxLayout="row" fxLayout.xs="column" fxFlex.gt-xs fxLayoutAlign="start stretch">
+            <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                <form class="form-container" fxLayout="column" fxFlex.gt-xs [formGroup]="details">
+                    <div fxLayout="column" class="tab-container left" fxLayoutGap="12px">
+                        <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                            <h3 class="m-0" fxFlex>Detalles de la Historia
+                                ({{currentRecord.created_at | date:'dd/MM/yyyy'}})</h3>
+                            <button mat-flat-button color="primary" (click)="saveDetails()"
+                                [disabled]="loading">Guardar</button>
+                        </div>
+                        <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                            <mat-label>Motivo de la consulta</mat-label>
+                            <textarea matInput cdkTextareaAuntosize placeholder="" rows="5" formControlName="motive"
+                                required></textarea>
+                        </mat-form-field>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form"
+                                floatLabel="always">
+                                <mat-label>Menarquia</mat-label>
+                                <input matInput formControlName="menarche" placeholder="..." />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form "
+                                floatLabel="always">
+                                <mat-label>Ciclos</mat-label>
+                                <input matInput formControlName="cycles" placeholder="..." />
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                            <mat-form-field appearance="outline" fxFlex.gt-xs="50" class="blue p-0 bold-form"
+                                floatLabel="always">
+                                <mat-label>FUR</mat-label>
+                                <input matInput [matDatepicker]="furPicker" placeholder="Seleccione" autocomplete="off"
+                                    formControlName="record_fur" (dateChange)="furChange($event)"
+                                    (change)="furChange($event)" />
+                                <mat-datepicker-toggle matSuffix [for]="furPicker"></mat-datepicker-toggle>
+                                <mat-datepicker #furPicker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form"
+                                floatLabel="always">
+                                <mat-label>G</mat-label>
+                                <input matInput formControlName="record_g" placeholder="..." />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form "
+                                floatLabel="always">
+                                <mat-label>P</mat-label>
+                                <input matInput formControlName="record_p" placeholder="..." />
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form"
+                                floatLabel="always">
+                                <mat-label>V</mat-label>
+                                <input matInput formControlName="record_v" placeholder="..." />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form"
+                                floatLabel="always">
+                                <mat-label>A</mat-label>
+                                <input matInput formControlName="record_a" placeholder="..." />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form"
+                                floatLabel="always">
+                                <mat-label>PP</mat-label>
+                                <input matInput formControlName="record_pp" placeholder="..." />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form"
+                                floatLabel="always">
+                                <mat-label>UP</mat-label>
+                                <input matInput formControlName="record_up" placeholder="..." />
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                            <mat-form-field appearance="outline" class="blue bold-form" floatLabel="always">
+                                <mat-label>PRS</mat-label>
+                                <input matInput formControlName="record_prs" placeholder="..." />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex.gt-xs="34" class="blue bold-form "
+                                floatLabel="always">
+                                <mat-label>FPP</mat-label>
+                                <input matInput formControlName="record_fpp" placeholder="..." readonly />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="blue bold-form " floatLabel="always">
+                                <mat-label>Amenorrea</mat-label>
+                                <input readonly matInput formControlName="amenorrhea_text" placeholder="..." />
+                            </mat-form-field>
+                            <div></div>
+                        </div>
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                            <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start center" class="add ">
+                                <mat-checkbox color="primary" formControlName="amenorrhea">Amenorrea</mat-checkbox>
+                                <button mat-stroked-button color="primary" class="" (click)="openCitologiesModal()">
+                                    Citologías({{ currentRecord.citologies ? currentRecord.citologies.length : '' }})
+                                </button>
+                                <button mat-stroked-button color="primary" class="" (click)="openPregnanciesModal()">
+                                    Embarazos({{ currentRecord.pregnancies ? currentRecord.pregnancies.length : '' }})
+                                </button>
+                            </div>
+                            <div fxFlex></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                <form class="form-container" fxLayout="column" fxFlex.gt-xs [formGroup]="conclusion">
+                    <div fxLayout="column" fxFlex.gt-xs class="tab-container left">
+                        <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                            <h3 class="m-0">Antecedentes</h3>
+                            <div fxFlex></div>
+                            <button mat-flat-button color="primary" (click)="saveConclusion()">Guardar</button>
+                        </div>
+                        <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                            <mat-label>Quirúrgicos</mat-label>
+                            <textarea matInput matAutosize formControlName="surgical" matTextareaAutosize placeholder=""
+                                rows="5"></textarea>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                            <mat-label>Patológicos</mat-label>
+                            <textarea matInput matAutosize formControlName="pathological" matTextareaAutosize
+                                placeholder="" rows="5"></textarea>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                            
+                            <mat-label>Notas</mat-label>
+                            <textarea matInput matAutosize formControlName="notes" matTextareaAutosize placeholder=""
+                                rows="6"></textarea>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ng-template>
+</mat-tab> -->

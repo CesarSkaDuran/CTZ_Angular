@@ -1,0 +1,28 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+  <div fxLayout="column" fxFlex fxLayoutAlign="start stretch" class="sideform">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <h3 class="title">Observaciones</h3>
+      <div fxFlex></div>
+    </div>
+    <form fxLayout="column" fxFlex [formGroup]="obs">
+      <mat-form-field appearance="outline" fxFlex class="blue bold-form mt-12" floatLabel="always">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          matAutosize
+          matTextareaAutosize
+          formControlName="description"
+          cdkAutosizeMinRows="9"
+        ></textarea>
+      </mat-form-field>
+      <div fxFlex></div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div fxFlex></div>
+        <button mat-stroked-button class="ml-12" (click)="close()">Cerrar</button>
+        <button mat-flat-button color="primary" class="ml-12" (click)="save()" [disabled]="sending || !obs.valid">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

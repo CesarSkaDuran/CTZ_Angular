@@ -1,0 +1,37 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+  <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" class="sideform">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <h3 class="title mb-4" fxFlex>Evolución</h3>
+    </div>
+    <form fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" [formGroup]="obs">
+      <!-- <perfect-scrollbar fxLayout="column" style="max-height: 428px;padding: 0 18px;"> -->
+
+      <mat-form-field appearance="outline" class="blue bold-form mb-6" floatLabel="always">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Seleccione" autocomplete="off"
+          required />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px" class="mb-6">
+        <mat-checkbox color="primary" formControlName="rejuv">Rejuvchip</mat-checkbox>
+        <mat-checkbox color="primary" formControlName="mona">Monalisa</mat-checkbox>
+      </div>
+      <mat-form-field appearance="outline" class="blue bold-form" floatLabel="always">
+        <mat-label>Detalles</mat-label>
+        <textarea matInput matAutosize matTextareaAutosize formControlName="details" rows="9"
+          ></textarea>
+      </mat-form-field>
+      <div fxFlex.gt-xs></div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div fxFlex></div>
+        <button mat-stroked-button color="warn" class="color-red" (click)="delete()" [hidden]="!evoId">Eliminar</button>
+        <button mat-stroked-button class="ml-6" (click)="close()">Cerrar</button>
+        <button mat-flat-button color="primary" class="ml-6" (click)="save()" [disabled]="sending || !obs.valid">
+          Guardar
+        </button>
+      </div>
+      <!-- </perfect-scrollbar> -->
+    </form>
+  </div>
+</div>

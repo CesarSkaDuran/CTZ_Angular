@@ -1,0 +1,840 @@
+<!-- <ng-keyboard-shortcuts [shortcuts]="shortcuts"></ng-keyboard-shortcuts> -->
+<vex-page-layout @stagger>
+  <vex-page-layout-content class="p-0" style="min-height: calc(100vh - 64px);">
+    <mat-drawer-container autosize hasBackdrop="false" style="min-height: calc(100vh - 64px);">
+      <mat-drawer #drawer class="example-sidenav" mode="over" opened="true" position="end" style="width:280px;">
+        <div class="patient-content px-6 pb-4">
+          <div fxLayout="row" class="mt-4">
+            <div fxFlex></div>
+            <button mat-icon-button (click)="toPrint()">
+              <mat-icon class="text-grey-600" [icIcon]="icPrint"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="openPatient(currentPatient)">
+              <mat-icon class="text-grey-600" [icIcon]="icDelete"></mat-icon>
+            </button>
+          </div>
+          <div class="basic-info" fxLayout="column" fxLayoutAlign="start center">
+            <img (click)="openPhotoModal(currentPatient)"
+              [src]="currentPatient && currentPatient.profile_url && currentPatient.profile_url != '' ? currentPatient.profile_url : '/assets/images/default-patient.jpg'"
+              alt="" class="w-150 mb-3 mt-2">
+            <div fxLayout="row">
+              <h3 class="title mb-4 center">{{ currentPatient ? currentPatient.name : '' }}</h3>
+              <button mat-icon-button (click)="openPatient(currentPatient)">
+                <mat-icon class="text-grey-600" [icIcon]="icEdit" style="color:#868686;"></mat-icon>
+              </button>
+            </div>
+
+          </div>
+          <div class="info px-4" fxLayout="column">
+            <span class="body-1 font-medium mt-2">Profesión</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? currentPatient.position : '' }}</span>
+            <span class="body-1 font-medium mt-2">Edad</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? ageFromDate(currentPatient.birth_date) : '' }} años</span>
+            <span class="body-1 font-medium mt-2">Fecha de N.</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? (currentPatient.birth_date | date: 'dd/MM/yyyy') : '' }}</span>
+            <span class="body-1 font-medium mt-2">Documento</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? currentPatient.identification : '' }}</span>
+            <span class="body-1 font-medium mt-2">E. Civil</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? civilToString(currentPatient.civil_status) : '' }}</span>
+            <span class="body-1 font-medium mt-2">Teléfono</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? currentPatient.phone : '' }}</span>
+            <span class="body-1 font-medium mt-2">Empresa</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient ? currentPatient.company : '' }}</span>
+            <span class="body-1 font-medium mt-2">Email</span>
+            <span class="subheading-1 text-secondary lower-case">{{ currentPatient && currentPatient.email ? currentPatient.email: 'Sin datos' }}</span>
+            <span class="body-1 font-medium mt-2">Pareja</span>
+            <span class="subheading-1 text-secondary">{{ currentPatient && currentPatient.partner_name != '' ? currentPatient.partner_name : 'Sin datos' }}</span>
+            <span class="subheading-1 text-secondary text-blue-500">{{ currentPatient ? currentPatient.partner_profession : '' }}</span>
+          </div>
+        </div>
+      </mat-drawer>
+
+       <mat-tab-group animationDuration="0ms">
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icHistory" class="mr-1 icon-primary"></mat-icon>
+             Historia
+           </ng-template>
+           <ng-template matTabContent>
+             <div fxLayout="row" fxLayout.xs="column" fxFlex.gt-xs fxLayoutAlign="start stretch">
+               <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                 <form class="form-container" fxLayout="column" fxFlex.gt-xs [formGroup]="details">
+                   <div fxLayout="column" class="tab-container left" fxLayoutGap="12px">
+                     <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                       <h3 class="m-0" fxFlex>Detalles de la Historia
+                         ({{currentRecord.created_at | date:'dd/MM/yyyy'}})</h3>
+                       <button mat-flat-button color="primary" (click)="saveDetails()"
+                         [disabled]="loading">Guardar</button>
+                     </div>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Motivo de la consulta</mat-label>
+                       <textarea matInput cdkTextareaAuntosize placeholder="" rows="5" formControlName="motive"
+                         required></textarea>
+                     </mat-form-field>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Menarquia</mat-label>
+                         <input matInput formControlName="menarche" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Ciclos</mat-label>
+                         <input matInput formControlName="cycles" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs="50" class="blue p-0 bold-form"
+                         floatLabel="always">
+                         <mat-label>FUR</mat-label>
+                         <input matInput [matDatepicker]="furPicker" placeholder="Seleccione" autocomplete="off"
+                           formControlName="record_fur" (dateChange)="furChange($event)" (change)="furChange($event)" />
+                         <mat-datepicker-toggle matSuffix [for]="furPicker"></mat-datepicker-toggle>
+                         <mat-datepicker #furPicker></mat-datepicker>
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>G</mat-label>
+                         <input matInput formControlName="record_g" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>P</mat-label>
+                         <input matInput formControlName="record_p" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>V</mat-label>
+                         <input matInput formControlName="record_v" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>A</mat-label>
+                         <input matInput formControlName="record_a" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>PP</mat-label>
+                         <input matInput formControlName="record_pp" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>UP</mat-label>
+                         <input matInput formControlName="record_up" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" class="blue bold-form" floatLabel="always">
+                         <mat-label>PRS</mat-label>
+                         <input matInput formControlName="record_prs" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs="34" class="blue bold-form "
+                         floatLabel="always">
+                         <mat-label>FPP</mat-label>
+                         <input matInput formControlName="record_fpp" placeholder="..." readonly />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" class="blue bold-form " floatLabel="always">
+                         <mat-label>Amenorrea</mat-label>
+                         <input readonly matInput formControlName="amenorrhea_text" placeholder="..." />
+                       </mat-form-field>
+                       <div></div>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start center" class="add ">
+                         <mat-checkbox color="primary" formControlName="amenorrhea">Amenorrea</mat-checkbox>
+                         <button mat-stroked-button color="primary" class="" (click)="openCitologiesModal()">
+                           Citologías({{ currentRecord.citologies ? currentRecord.citologies.length : '' }})
+                         </button>
+                         <button mat-stroked-button color="primary" class="" (click)="openPregnanciesModal()">
+                           Embarazos({{ currentRecord.pregnancies ? currentRecord.pregnancies.length : '' }})
+                         </button>
+                       </div>
+                       <div fxFlex></div>
+                     </div>
+                   </div>
+                 </form>
+               </div>
+               <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                 <form class="form-container" fxLayout="column" fxFlex.gt-xs [formGroup]="conclusion">
+                   <div fxLayout="column" fxFlex.gt-xs class="tab-container right">
+                     <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                       <h3 class="m-0">Antecedentes</h3>
+                       <div fxFlex></div>
+                       <button mat-flat-button color="primary" (click)="saveConclusion()">Guardar</button>
+                     </div>
+                     <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                       <mat-label>Quirúrgicos</mat-label>
+                       <textarea matInput matAutosize formControlName="surgical" matTextareaAutosize placeholder=""
+                         rows="5"></textarea>
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                       <mat-label>Patológicos</mat-label>
+                       <textarea matInput matAutosize formControlName="pathological" matTextareaAutosize placeholder=""
+                         rows="5"></textarea>
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+
+                       <mat-label>Notas</mat-label>
+                       <textarea matInput matAutosize formControlName="notes" matTextareaAutosize placeholder=""
+                         rows="6"></textarea>
+                     </mat-form-field>
+                   </div>
+                 </form>
+               </div>
+             </div>
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icPhysic" class="mr-2 icon-primary"></mat-icon>
+             Examen Físico
+           </ng-template>
+           <ng-template matTabContent>
+             <!-- <perfect-scrollbar fxLayout="column" style="max-height: calc(100vh - 110px);"> -->
+             <div fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start stretch">
+               <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                 <form fxLayout="column" fxFlex.gt-xs [formGroup]="physical" class="tab-container right"
+                   fxLayoutGap="14px">
+                   <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                     <h3 class="m-0" fxFlex>Examen Físico</h3>
+                     <button mat-flat-button color="primary" (click)="savePhysical()"
+                       [disabled]="loading">Guardar</button>
+                   </div>
+                   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>TA</mat-label>
+                       <input matInput formControlName="physical_ta" placeholder="..." required />
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>FC</mat-label>
+                       <input matInput formControlName="physical_fc" placeholder="..." />
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Peso</mat-label>
+                       <input matInput formControlName="weight" placeholder="..." />
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Estatura</mat-label>
+                       <input matInput formControlName="height" placeholder="..." />
+                     </mat-form-field>
+                   </div>
+                   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Cabeza</mat-label>
+                       <input matInput formControlName="head" placeholder="..." />
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Cuello</mat-label>
+                       <input matInput formControlName="neck" placeholder="..." />
+                     </mat-form-field>
+                   </div>
+                   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                     <mat-form-field appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                       <mat-label>Torax</mat-label>
+                       <input matInput formControlName="thorax" placeholder="..." />
+                     </mat-form-field>
+                     <div fxFlex class="ml-4">
+                       <mat-checkbox color="primary" formControlName="pregnancy">Embarazo</mat-checkbox>
+                     </div>
+                   </div>
+                   <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                     <!-- <mat-label>Notas</mat-label> -->
+                     <mat-label>Exámenes Ginecológicos</mat-label>
+                     <textarea matInput matAutosize formControlName="exams" matTextareaAutosize placeholder=""
+                       rows="6"></textarea>
+                   </mat-form-field>
+                 </form>
+               </div>
+             </div>
+             <!-- </perfect-scrollbar> -->
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icConclusion" class="mr-2 icon-primary"></mat-icon>
+             Conclusión
+           </ng-template>
+           <ng-template matTabContent>
+             <!-- <perfect-scrollbar fxLayout="column" style="max-height: calc(100vh - 110px);"> -->
+             <div fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start stretch">
+               <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                 <form fxLayout="column" fxFlex.gt-xs class="tab-container right" [formGroup]="conclusion"
+                   fxLayoutGap="14px">
+                   <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                     <h3 class="m-0" fxFlex>Final</h3>
+                     <button mat-flat-button color="primary" (click)="saveConclusion()">Guardar</button>
+                   </div>
+                   <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                     <mat-label>Diagnóstico</mat-label>
+                     <textarea matInput matAutosize formControlName="diagnosis" matTextareaAutosize placeholder=""
+                       rows="4"></textarea>
+                   </mat-form-field>
+                   <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                     <mat-label>Exámenes</mat-label>
+                     <textarea matInput matAutosize formControlName="tests" matTextareaAutosize placeholder=""
+                       rows="4"></textarea>
+                   </mat-form-field>
+                   <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                     <mat-label>Conducta</mat-label>
+                     <textarea matInput matAutosize formControlName="behavior" matTextareaAutosize placeholder=""
+                       rows="4"></textarea>
+                   </mat-form-field>
+                   <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                     <mat-label>Procedimiento</mat-label>
+                     <textarea matInput matAutosize formControlName="process" matTextareaAutosize placeholder=""
+                       rows="4"></textarea>
+                   </mat-form-field>
+                 </form>
+               </div>
+             </div>
+             <!-- </perfect-scrollbar> -->
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icEvolution" class="mr-2 icon-primary"></mat-icon>
+             Evolución
+           </ng-template>
+           <ng-template matTabContent>
+             <!-- <perfect-scrollbar fxLayout="column" style="max-height: calc(100vh - 110px);"> -->
+             <form class="form-container" [formGroup]="evolution">
+               <div fxLayout="row" fxFlex fxLayoutAlign="start start">
+                 <div fxLayout="column" fxFlex.gt-xs class="tab-container left">
+                   <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                     <h3 class="m-0" fxFlex>Evolución en esta consulta</h3>
+                     <button mat-flat-button color="primary" (click)="openEvoModal()">Nuevo</button>
+                   </div>
+
+                   <div fxLayout="column" fxLayoutAlign="start stretch">
+                     <div fxFlex.gt-xs class="evolution" (click)="openEvoModal(evolution)"
+                       *ngFor="let evolution of currentRecord.evolutions">
+                       <span>{{evolution.date | date:'dd/MM/yyyy'}}</span>
+                       <p [innerHTML]="evolution.details"></p>
+                       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="18px">
+                         <p class="text-blue-600 body-1 font-medium mb-0 mt-0" [hidden]="evolution.rejuv == 0">Rejuvchip
+                         </p>
+                         <p class="text-blue-600 body-1 font-medium mb-0 mt-0" [hidden]="evolution.mona == 0">Monalisa
+                         </p>
+                       </div>
+                     </div>
+                   </div>
+                   <!-- list -->
+
+                 </div>
+               </div>
+             </form>
+             <!-- </perfect-scrollbar> -->
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icMultimedia" class="mr-2 icon-primary"></mat-icon>
+             Multimedia
+           </ng-template>
+           <ng-template matTabContent>
+             <div class="p-8 pb-2" fxLayout="column" fxLayoutAlign="start start">
+               <div fxLayout="row" fxLayoutAlign="start center" class="mb-6">
+                 <h3 class="mr-12" fxFlex>Registro multimedia</h3>
+                 <button mat-flat-button (click)="getRecordMultimedia(currentRecord.identification)"
+                   [disabled]="loading">Actualizar</button>
+               </div>
+             </div>
+             <div class="p-8 pt-4" fxLayout="column" fxLayoutAlign="start stretch">
+               <mat-card>
+                 <form [formGroup]="uploadForm">
+                   <mat-card-content fxLayout="column">
+                     <input formControlName="document" type="file" ng2FileSelect accept=".png, .jpg, .jpeg, .mp4, .avi"
+                       [uploader]="uploader" multiple /><br />
+                     <br>
+                     <div class="drop-zone">
+                       <div ng2FileDrop [uploader]="uploader" class="drop-zone">
+                         Arrastra y suelta los archivos aquí
+                       </div>
+                     </div>
+                     <table>
+                       <thead>
+                         <tr>
+                           <th width="50%">Nombre</th>
+                           <th>Tamaño</th>
+                           <th>Progreso</th>
+                           <!--  <th>Estado</th>
+                        <th>Acciones</th> -->
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr *ngFor="let item of uploader.queue">
+                           <td><strong>{{ item?.file?.name }}</strong></td>
+                           <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                           <td>
+                             <div class="progress" style="margin-bottom: 0;">
+                               <mat-progress-bar mode="determinate" [value]="item.progress"></mat-progress-bar>
+                             </div>
+                           </td>
+                           <!-- <td class="text-center">
+                          <span *ngIf="item.isSuccess">
+                            <mat-icon [icIcon]="icDone"></mat-icon>                  
+                          </span>
+                          <span *ngIf="item.isCancel">
+                            <mat-icon [icIcon]="icBlock"></mat-icon>
+                          </span>
+                          <span *ngIf="item.isError">
+                            <mat-icon [icIcon]="icRemove"></mat-icon>                            
+                          </span>
+                        </td>
+                        <td nowrap>
+                          <button mat-raised-button (click)="item.upload()" class="bg-green-600 text-green-100" 
+                            [disabled]="item.isReady || item.isUploading || item.isSuccess">Subir</button>
+                          <button mat-raised-button (click)="item.remove()" class="bg-orange-600 text-orange-100 ml-8">Remover</button>
+                        </td> -->
+                         </tr>
+                       </tbody>
+                     </table>
+                     <br>
+                     <div>
+                       Queue progress:
+                       <div class="progress" style="">
+                         <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }">
+                         </div>
+                       </div>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxFlex.gt-xs fxLayoutGap="18px">
+                       <button mat-raised-button class="bg-green-600 text-green-100" (click)="uploader.uploadAll()"
+                         [disabled]="!uploader.getNotUploadedItems().length">Subir todo</button>
+
+                       <button mat-raised-button class="bg-red-600 text-red-100" (click)="uploader.cancelAll()"
+                         [disabled]="!uploader.isUploading">Cancelar</button>
+
+                       <button mat-raised-button class="bg-orange-600 text-orange-100" (click)="uploader.clearQueue()"
+                         [disabled]="!uploader.queue.length">Remover todo</button>
+                     </div>
+                     <!-- <button mat-raised-button color="accent" [disabled]="!uploadForm.valid" type="submit">Upload
+                  Data</button> -->
+                   </mat-card-content>
+                 </form>
+               </mat-card>
+             </div>
+             <div class="p-8" fxLayout="column" fxLayoutAlign="start stretch">
+               <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="start start" fxFlex.gt-xs>
+                 <mat-card fxLayout="row" fxLayout.xs="column" fxLayoutAlign="stretch stretch" fxFlex.gt-xs="48"
+                   class="mb-8 mr-8" *ngFor="let multimedia of currentRecord.multimedias; let i=index">
+                   <img *ngIf="multimedia.type == 1" [src]="multimedia.url" alt="multimedia" class="w-150 selectable"
+                     (click)="open(i)">
+                   <img *ngIf="multimedia.type == 2" src="./assets/images/video-prev.png" alt="multimedia"
+                     class="w-150 selectable" (click)="openMultimediaModal(multimedia)">
+                   <div fxLayout="column" fxLayoutAlign="space-between start" class="ml-4" fxFlex.gt-xs>
+                     <p class="pt-0 body-1">{{multimedia.description}}</p>
+                     <p class="caption pb-0">{{multimedia.created_at}}</p>
+                   </div>
+                   <button mat-icon-button class="text-grey-400" aria-label=""
+                     (click)="openMultimediaModal(multimedia)">
+                     <mat-icon [icIcon]="icEdit"></mat-icon>
+                   </button>
+                   <button mat-icon-button class="text-red-200" aria-label="" (click)="deleteMultimedia(multimedia)">
+                     <mat-icon [icIcon]="icDelete"></mat-icon>
+                   </button>
+                 </mat-card>
+               </div>
+
+               <!-- <div fxLayout="row" fxFlex fxLayoutAlign="start start" fxLayoutGap="8px">
+              <div *ngFor="let multimedia of currentRecord.multimedias; let i=index">
+                <img [src]="multimedia.url" (click)="open(i)" class="w-150" />
+              </div>
+            </div> -->
+             </div>
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icPopq" class="mr-2 icon-primary"></mat-icon>
+             POPQ
+           </ng-template>
+           <ng-template matTabContent>
+             <!-- <perfect-scrollbar fxLayout="column" style="max-height: calc(100vh - 110px);"> -->
+             <div fxLayout="row" fxLayout.xs="column" fxFlex.gt-xs fxLayoutAlign="start stretch">
+               <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                 <form fxLayout="column" fxFlex.gt-xs [formGroup]="popq">
+                   <div fxLayout="column" class="tab-container left" fxLayoutGap="12px">
+                     <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                       <h3 class="m-0" fxFlex>POPQ</h3>
+                       <button mat-flat-button color="primary" (click)="savePopq()"
+                         [disabled]="loading">Guardar</button>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Aa</mat-label>
+                         <input matInput formControlName="popq_Aa" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Ba</mat-label>
+                         <input matInput formControlName="popq_Ba" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>C</mat-label>
+                         <input matInput formControlName="popq_C" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>gh</mat-label>
+                         <input matInput formControlName="popq_gh" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>pb</mat-label>
+                         <input matInput formControlName="popq_pb" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>tvl</mat-label>
+                         <input matInput formControlName="popq_tvl" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Ap</mat-label>
+                         <input matInput formControlName="popq_Ap" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Bp</mat-label>
+                         <input matInput formControlName="popq_Bp" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>D</mat-label>
+                         <input matInput formControlName="popq_D" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                   </div>
+                 </form>
+               </div>
+             </div>
+             <!-- </perfect-scrollbar> -->
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icControl" class="mr-2 icon-primary"></mat-icon>
+             Control Prenatal
+           </ng-template>
+           <ng-template matTabContent>
+             <!-- <perfect-scrollbar fxLayout="column" style="max-height: calc(100vh - 110px);"> -->
+
+             <div class="pt-9 pl-9 pb-9 pr-9" fxLayout="column" fxLayoutAlign="start stretch">
+               <div fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center" class="pb-6"
+                 fxLayoutGap="16px">
+                 <h3 class="m-0 tab-title" fxFlex>Control Prenatal</h3>
+                 <button mat-stroked-button color="primary" (click)="openObsModal()">OBSERVACIONES</button>
+                 <button mat-flat-button color="primary" (click)="openControlModal()">NUEVO CONTROL</button>
+               </div>
+
+               <!-- table -->
+               <table mat-table [dataSource]="controlsData" matSort (matSortChange)="sortControl($event)"
+                 class="hc-table w-full">
+                 <!-- Type Column -->
+                 <ng-container matColumnDef="week">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Semana</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     <div fxLayout="column" fxLayoutAlign="center start">
+                       <span class="name">{{ row.week }}</span>
+                       <span class="position">{{ row.date }}</span>
+                     </div>
+                   </td>
+                 </ng-container>
+
+                 <!-- Distribuitor Column -->
+                 <ng-container matColumnDef="weight">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.weight }}
+                   </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="ta">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>T.A.</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.control_t }} / {{ row.control_a }}
+                   </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="pam">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>P.A.M.</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.control_pam }}
+                   </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="au">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>A.U.</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.control_au }}
+                   </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="pression">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Pres.</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.pression }}
+                   </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="fcf">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>F.C.F</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.fcf }}
+                   </td>
+                 </ng-container>
+
+                 <ng-container matColumnDef="edema">
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Edema</th>
+                   <td mat-cell *matCellDef="let row" (click)="openControlModal(row)">
+                     {{ row.edema }}
+                   </td>
+                 </ng-container>
+
+                 <!-- Symbol Column -->
+                 <ng-container matColumnDef="options">
+                   <th mat-header-cell *matHeaderCellDef>Op.</th>
+                   <td mat-cell *matCellDef="let element" class="center">
+                     <button mat-icon-button [matMenuTriggerFor]="menu">
+                       <mat-icon>more_vert</mat-icon>
+                     </button>
+                     <mat-menu #menu="matMenu" class="row-menu">
+                       <button mat-menu-item (click)="openControlModal(element)">
+                         <mat-icon>edit</mat-icon>
+                         <span>Editar</span>
+                       </button>
+                       <button mat-menu-item class="warning">
+                         <mat-icon>delete</mat-icon>
+                         <span>Eliminar</span>
+                       </button>
+                     </mat-menu>
+                   </td>
+                 </ng-container>
+
+                 <tr mat-header-row *matHeaderRowDef="displayedControlColumns"></tr>
+                 <tr mat-row *matRowDef="let row; columns: displayedControlColumns"></tr>
+               </table>
+
+               <div [hidden]="controlsData.length > 0" class="alternate-result">
+                 <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="center center">
+                   <div [hidden]="!loadingControls">
+                     <div fxLayout="column" fxLayoutAlign="center center">
+                       <mat-spinner diameter="32"></mat-spinner>
+                       <span>CARGANDO</span>
+                     </div>
+                   </div>
+                   <div [hidden]="loadingControls || controlsData.length > 0">
+                     <div fxLayout="column" fxLayoutAlign="center center">
+                       <span>NO HAY RESULTADOS</span>
+                       <span>CREA UN NUEVO CONTROL</span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <mat-paginator [length]="resultsLength" (page)="pageChange($event)" [pageSizeOptions]="[50]">
+               </mat-paginator>
+             </div>
+             <!-- </perfect-scrollbar> -->
+           </ng-template>
+         </mat-tab>
+         <mat-tab>
+           <ng-template mat-tab-label>
+             <mat-icon [icIcon]="icInfo" class="mr-2 icon-primary"></mat-icon>
+             Información adicional
+           </ng-template>
+           <ng-template matTabContent>
+             <!-- <perfect-scrollbar fxLayout="column" style="max-height: calc(100vh - 110px);"> -->
+             <div fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start stretch">
+               <div fxLayout="column" fxFlex.gt-xs="50" fxLayoutAlign="start stretch">
+                 <form fxLayout="column" [formGroup]="laboratory" class="form-container">
+                   <div fxLayout="column" fxFlex.gt-xs class="tab-container left">
+                     <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                       <h3 class="m-0" fxFlex>Laboratorio</h3>
+                       <button mat-flat-button color="primary" (click)="saveLaboratory()">Guardar</button>
+                     </div>
+
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <div fxFlex.gt-xs="20">Paciente</div>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Grupo</mat-label>
+                         <input matInput formControlName="patient_group" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>RH</mat-label>
+                         <input matInput formControlName="patient_rh" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <div fxFlex.gt-xs="20">Esposo</div>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Grupo</mat-label>
+                         <input matInput formControlName="partner_group" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>RH</mat-label>
+                         <input matInput formControlName="partner_rh" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px" fxLayoutAlign="start center"
+                       class="add ">
+                       <button mat-stroked-button color="primary" class="" (click)="openCoombsModal()">
+                         Coombs({{ currentRecord.coombs ? currentRecord.coombs.length : '' }})
+                       </button>
+                       <button mat-stroked-button color="primary" class="" (click)="openHtoModal()">
+                         HTO({{ currentRecord.htos ? currentRecord.htos.length : '' }})
+                       </button>
+                       <button mat-stroked-button color="primary" class="" (click)="openHbModal()">
+                         Hb({{ currentRecord.hbs ? currentRecord.hbs.length : '' }})
+                       </button>
+                       <button mat-stroked-button color="primary" class="" (click)="openCitModal()">
+                         Cit. de orina({{ currentRecord.cits ? currentRecord.cits.length : '' }})
+                       </button>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px" fxLayoutAlign="start center"
+                       class="add ">
+                       <button mat-stroked-button color="primary" class="" (click)="openVaccinesModal()">
+                         Vacunas({{ currentRecord.vaccines ? currentRecord.vaccines.length : '' }})
+                       </button>
+                       <button mat-stroked-button color="primary" class="" (click)="openPregnanciesModal()">
+                         Adicionales
+                       </button>
+                     </div>
+                   </div>
+                 </form>
+                 <form fxLayout="column" [formGroup]="birth" class="form-container">
+                   <div fxLayout="column" fxFlex.gt-xs class="tab-container left">
+                     <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                       <h3 class="m-0" fxFlex>Parto</h3>
+                       <button mat-flat-button color="primary" (click)="saveBirth()">Guardar</button>
+                     </div>
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs="50" class="blue p-0 bold-form"
+                         floatLabel="always">
+                         <mat-label>Fecha</mat-label>
+                         <input matInput [matDatepicker]="bornDate2" formControlName="date" placeholder="Seleccione"
+                           autocomplete="off" required />
+                         <mat-datepicker-toggle matSuffix [for]="bornDate2"></mat-datepicker-toggle>
+                         <mat-datepicker #bornDate2></mat-datepicker>
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Hora</mat-label>
+                         <input matInput formControlName="time" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Tipo</mat-label>
+                         <input matInput formControlName="type" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Episiotomía</mat-label>
+                         <input matInput formControlName="episiotomy" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Alum</mat-label>
+                         <input matInput formControlName="alum" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Pérdida sanguinea</mat-label>
+                         <input matInput formControlName="blood_loss" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Oxitocicos</mat-label>
+                         <input matInput formControlName="oxytocic" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Amestesia</mat-label>
+                         <input matInput formControlName="anesthesia" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+
+                     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                         <mat-label>Sexo</mat-label>
+                         <input matInput formControlName="sex" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Peso</mat-label>
+                         <input matInput formControlName="weight" placeholder="..." />
+                       </mat-form-field>
+                       <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                         <mat-label>Talla</mat-label>
+                         <input matInput formControlName="height" placeholder="..." />
+                       </mat-form-field>
+                     </div>
+
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Observaciones</mat-label>
+                       <textarea matInput matAutosize matTextareaAutosize formControlName="observations" placeholder=""
+                         rows="4" value=""></textarea>
+                     </mat-form-field>
+                   </div>
+                 </form>
+               </div>
+
+               <div fxLayout="column" fxFlex.gt-xs="50" class="tab-container right">
+                 <form fxLayout="column" [formGroup]="labor" class="form-container">
+                   <div fxLayout="row" fxLayoutAlign="start center" class="pb-6">
+                     <h3 class="m-0" fxFlex>Trabajo de Parto</h3>
+                     <button mat-flat-button color="primary" (click)="saveLabor()">Guardar</button>
+                   </div>
+                   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                     <mat-form-field appearance="outline" fxFlex.gt-xs="50" class="blue p-0 bold-form"
+                       floatLabel="always">
+                       <mat-label>Fecha</mat-label>
+                       <input matInput [matDatepicker]="bornDate" formControlName="date" placeholder="Seleccione"
+                         autocomplete="off" required />
+                       <mat-datepicker-toggle matSuffix [for]="bornDate"></mat-datepicker-toggle>
+                       <mat-datepicker #bornDate></mat-datepicker>
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                       <mat-label>Hora</mat-label>
+                       <input matInput formControlName="time" placeholder="..." />
+                     </mat-form-field>
+                   </div>
+
+                   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>T.A.</mat-label>
+                       <input matInput formControlName="labor_ta" placeholder="..." />
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                       <mat-label>FCF</mat-label>
+                       <input matInput formControlName="labor_fcf" placeholder="..." />
+                     </mat-form-field>
+                   </div>
+
+                   <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                       <mat-label>Membranas</mat-label>
+                       <input matInput formControlName="membranes" placeholder="..." />
+                     </mat-form-field>
+                     <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form " floatLabel="always">
+                       <mat-label>Presentación</mat-label>
+                       <input matInput formControlName="presentation" placeholder="..." />
+                     </mat-form-field>
+                   </div>
+
+                   <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                     <mat-label>Observaciones</mat-label>
+                     <textarea matInput matAutosize matTextareaAutosize formControlName="observations" placeholder=""
+                       rows="4"></textarea>
+                   </mat-form-field>
+                 </form>
+               </div>
+             </div>
+             <!-- </perfect-scrollbar> -->
+           </ng-template>
+         </mat-tab>
+       </mat-tab-group>
+       <button type="button" mat-icon-button (click)="drawer.toggle()" [ngClass]="[drawer.opened ? 'opened' : '']" class="patient-shortcut">
+          <mat-icon [icIcon]="icPatient" class="mr-1 icon-primary"></mat-icon>
+       </button>
+    </mat-drawer-container>
+  </vex-page-layout-content>
+</vex-page-layout>
+
+
+
+
+

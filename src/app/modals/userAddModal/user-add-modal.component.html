@@ -1,0 +1,78 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title *ngIf="!id_cliente" class="title text-black-600">Crear cliente---</h2>
+    <h2 mat-dialog-title *ngIf="id_cliente" class="title text-black-600">Modificar cliente---</h2>
+  </div>
+  <!--<button mat-stroked-button (click)="openNewPatient()" color="primary" class="mt-1" [hidden]="showOnlyName">Nuevo Paciente</button>-->
+  <mat-dialog-content style="height: 500px;">
+    <form fxLayout="column"  fxFlex.gt-xs [formGroup]="usr">
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+              <mat-label>Nombre</mat-label>
+              <input matInput  placeholder="..." formControlName="name" />
+            </mat-form-field>
+          </div>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+              <mat-label>Documento</mat-label>
+              <input matInput type="number" placeholder="..." formControlName="tipo_documento" />
+            </mat-form-field>
+          </div>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+              style="flex-grow: 2;">
+              <mat-label>Dirección</mat-label>
+              <input matInput placeholder="..." formControlName="direccion" />
+            </mat-form-field>
+          </div>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+              <mat-label>Teléfono de empresa</mat-label>
+              <input matInput type="number" placeholder="..." formControlName="telefono_empresa" />
+            </mat-form-field>
+          </div>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+              <mat-label>Teléfono de contacto</mat-label>
+              <input matInput type="number" placeholder="..." formControlName="telefono_contacto" />
+            </mat-form-field>
+          </div>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" placeholder="..." formControlName="email"  />
+               <mat-error *ngIf="usr.get('email').invalid">{{ getErrorMessage() }}</mat-error>
+            </mat-form-field>
+          </div>
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" [hidden]="showOnlyName"
+              style="flex-grow: 2;">
+              <mat-label>Color asignado</mat-label>
+              <mat-select formControlName="color" placeholder="..." #singleSelect>
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="patientFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let patient of filteredcolor | async" [value]="patient.id_referencia">
+                 <p [ngStyle]="{'background-color': patient.id_referencia}">
+                   
+                  {{patient.name}}
+                   
+                 </p> 
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <div class="linea-form" [hidden]="data.id_cliente">
+              <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                  <mat-label>Contraseña</mat-label>
+                  <input matInput type="password" placeholder="..." formControlName="password" />
+              </mat-form-field>
+            </div>
+            
+          <div class="cont-btns">
+            <button mat-button (click)="close()">Cancelar</button>
+            <button mat-button *ngIf="!id_cliente" (click)="save()" [disabled]="sending || !usr.valid">Crear</button>
+            <button mat-button *ngIf="id_cliente" (click)="save()" [disabled]="sending || !usr.valid">Modificar</button>
+          </div>
+    </form>
+ </mat-dialog-content>
+
+ <!--(click)="openAppointmentModal()"-->

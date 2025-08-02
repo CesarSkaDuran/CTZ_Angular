@@ -1,0 +1,44 @@
+<vex-page-layout @stagger>
+  <vex-page-layout-content *ngIf="this.role != 'consulta'" fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="start" class="mt-4" fxLayoutGap="16px">
+      <div fxLayout="column" fxFlex="270px">
+        <div class="card p-4 h-100">
+          <h3>Calendario</h3>
+          <p class="mb-1 mt-3">Antes de agendar verifica el horario del especialista</p>
+          <ul class="my-3">
+            <li class="mb-2" fxLayout="row" fxLayoutAlign="start center">
+              <div class="circle-dot green mr-2"></div> Despachado
+            </li>
+            <li class="mb-2" fxLayout="row" fxLayoutAlign="start center">
+              <div class="circle-dot orange mr-2"></div> En revision
+            </li>
+            <li class="mb-2" fxLayout="row" fxLayoutAlign="start center">
+              <div class="circle-dot blue mr-2"></div> Programado
+            </li>
+            <li class="" fxLayout="row" fxLayoutAlign="start center">
+              <div class="circle-dot red mr-2"></div> Cancelado
+            </li>
+            <li class="" fxLayout="row" fxLayoutAlign="start center">
+              <div class="circle-dot mr-2" style="background-color: #81D4FA;"></div> Finalizado
+            </li>
+          </ul>
+          <button mat-flat-button
+            [hidden]="getRoleId()==6"
+            [ngStyle]="{'display': userPermisoStatus() == 2 ?'none' :  userPermisoStatus() == 0 ? 'none' : '' }"
+            color="primary" class="w-100 mt-3" (click)="openAppointmentModal()">
+            NUEVO PEDIDO</button>
+          <button [hidden]="getRoleId()==6" [ngStyle]="{'display': userPermisoStatus() == 1 ? 'none' : userPermisoStatus() == 0 ? 'none' : '' }"
+            mat-flat-button color="primary" class="w-100 mt-3" (click)="openAppointmentVendedor()">NUEVO PEDIDO</button>
+        </div>
+      </div>
+      <div fxLayout="column" fxFlex>
+        <div class="card overflow-auto p-4">
+          <full-calendar [ngStyle]="{'display': userPermisoStatus() == 4 ?'none' :  userPermisoCrear() }"
+            color="primary" class="w-100 mt-3"  #calendar [options]="calendarOptions">
+          </full-calendar>
+        </div>
+      </div>
+    </div>
+  </vex-page-layout-content>
+
+</vex-page-layout>

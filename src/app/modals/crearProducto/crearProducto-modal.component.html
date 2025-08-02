@@ -1,0 +1,38 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title class="title text-black-600" *ngIf="id_producto">Modificar Producto</h2>
+    <h2 mat-dialog-title class="title text-black-600" *ngIf="!id_producto">Crear Producto</h2>
+</div>
+
+<mat-dialog-content >
+    <form fxLayout="column" fxFlex.gt-xs [formGroup]="usr">
+
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Nombre</mat-label>
+                <input matInput placeholder="..." formControlName="nombre" [(ngModel)]="nombre" />
+            </mat-form-field>
+        </div>
+
+    
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Precio</mat-label>
+                <input matInput placeholder="..." formControlName="precio" [(ngModel)]="precio" />
+            </mat-form-field>
+        </div>
+ 
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Unidad de medida</mat-label>
+                <input matInput type="email" placeholder="..." formControlName="unidad_medida" [(ngModel)]="unidad_medida" />
+            </mat-form-field>
+        </div>
+        <div class="cont-btns">
+            
+            <button mat-button (click)="close()">Cancelar</button>
+            <button mat-button *ngIf="!id_producto" color="primary" (click)="save()" [disabled]="sending || !usr.valid">Crear</button>
+            <button mat-button *ngIf="id_producto" color="primary" (click)="save()" [disabled]="sending || !usr.valid">Modificar</button>
+        </div>
+
+    </form>
+</mat-dialog-content>

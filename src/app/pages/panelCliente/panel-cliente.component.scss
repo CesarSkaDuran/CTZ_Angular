@@ -1,0 +1,16 @@
+@media (max-width: 768px) { 
+    .cont-home-card{
+        flex-direction: column !important;
+    }
+
+    .home-card{
+        max-width: inherit !important;
+        margin: 20px 30px !important;
+    }
+    .anchura_btn{
+        width: 100% !important;
+        padding: 6px;
+        position: relative;
+        top: -7px;
+    }
+ }

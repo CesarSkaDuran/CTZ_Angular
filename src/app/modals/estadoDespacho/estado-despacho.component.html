@@ -1,0 +1,21 @@
+<div class="container">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+        <h2>Estado Despacho {{data.estado_despacho}}</h2>
+    </div>
+
+    <form class="example-form" [formGroup]="estadoFormGroup">
+        <mat-form-field style="width: 100%; margin-top: 30px;" appearance="outline" class="mb-4 bold-form" floatLabel="always">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado" required>
+                <mat-option [value]=3>Despachado</mat-option>
+                <mat-option [value]=5>En descarga</mat-option>
+                <mat-option [value]=6>Finalizado</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button (click)="save()">Guardar</button>
+
+</form>
+
+     
+</div>

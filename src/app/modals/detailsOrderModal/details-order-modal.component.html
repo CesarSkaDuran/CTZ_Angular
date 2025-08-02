@@ -1,0 +1,131 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title class="title text-black-600">Detalle Pedido</h2>
+  </div>
+  <!--<button mat-stroked-button (click)="openNewPatient()" color="primary" class="mt-1" [hidden]="showOnlyName">Nuevo Paciente</button>-->
+  <mat-dialog-content style="height: 500px;">
+    <form fxLayout="column" fxLayout.gt-xs="row" fxFlex.gt-xs [formGroup]="obs">
+
+     <div fxLayout="column" fxFlex.gt-xs class="p-3">
+ 
+         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Cliente</mat-label>
+            <input matInput placeholder="..." formControlName="cliente" required />
+          </mat-form-field>
+         </div>
+
+         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Metros 3</mat-label>
+            <input matInput placeholder="..." formControlName="metros" required />
+          </mat-form-field>
+         </div>
+
+         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Tipo Concreto</mat-label>
+            <mat-select formControlName="type" placeholder="..." #singleSelect>
+              <mat-option>
+                <ngx-mat-select-search></ngx-mat-select-search>
+              </mat-option>
+              <mat-option>
+               <!--{{patient.name}}-->
+               Primer label
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+         </div>
+
+         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status" placeholder="..." #singleSelect>
+              <mat-option>
+                <ngx-mat-select-search></ngx-mat-select-search>
+              </mat-option>
+              <mat-option>
+               <!--{{patient.name}}-->
+               Primer label
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+         </div>
+          
+         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Dirección entrega</mat-label>
+            <input matInput placeholder="..." formControlName="direccion" required />
+          </mat-form-field>
+         </div>
+
+         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Observaciones</mat-label>
+            <input matInput placeholder="..." formControlName="observaciones" required />
+          </mat-form-field>
+         </div>
+     </div>
+
+     <div fxLayout="column" fxFlex.gt-xs class="p-3">
+       <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always">
+         <mat-label>Fecha</mat-label>
+         <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Seleccione" autocomplete="off"
+           required />
+         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+         <mat-datepicker #datePicker></mat-datepicker>
+       </mat-form-field>
+     
+       <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+          <mat-label>Hora en cargue</mat-label>
+          <input matInput type="time" placeholder="..." formControlName="hora_cargue" />
+        </mat-form-field>
+       </div>
+        
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+          <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+            <mat-label>Hora Ap obra</mat-label>
+            <input matInput type="time" placeholder="..." formControlName="hora_obra" />
+          </mat-form-field>
+        </div>
+
+      
+      <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+          <mat-label>Vendedor</mat-label>
+          <mat-select formControlName="vendedor" placeholder="..." #singleSelect>
+            <mat-option>
+              <ngx-mat-select-search></ngx-mat-select-search>
+            </mat-option>
+            <mat-option>
+             <!--{{patient.name}}-->
+             Primer label
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+       </div>
+
+      <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        <mat-form-field appearance="outline" class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
+          <mat-label>Conductor</mat-label>
+          <mat-select formControlName="conductor" placeholder="..." #singleSelect>
+            <mat-option>
+              <ngx-mat-select-search></ngx-mat-select-search>
+            </mat-option>
+            <mat-option>
+             <!--{{patient.name}}-->
+             Primer label
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+       </div>
+     </div>
+    </form>
+ </mat-dialog-content>
+
+ <div class="cont-btns">
+   <button mat-button>Cancelar</button>
+   <button mat-button></button>
+ </div>
+
+ <!--(click)="openAppointmentModal()"-->

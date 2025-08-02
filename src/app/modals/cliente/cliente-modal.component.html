@@ -1,0 +1,35 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 [hidden]="showOnlyName" mat-dialog-title class="title text-black-600">Cambiar Cliente</h2>
+    <h2 [hidden]="!showOnlyName" mat-dialog-title class="title text-black-600">Datos del pedido</h2>
+</div>
+<mat-dialog-content style="height: 390px;">
+    <form fxLayout="column" fxLayout.gt-xs="row" fxFlex.gt-xs [formGroup]="obs">
+        <div fxLayout="column" fxFlex.gt-xs class="p-3">
+            <div style="display: flex; flex-direction: row; flex-wrap: wrap;" [hidden]="showOnlyName">
+                <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" [hidden]="showOnlyName"
+                    style="flex-grow: 2;">
+                    <mat-label>Cliente</mat-label>
+                    <mat-select formControlName="cliente" placeholder="..." #singleSelect>
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="patientFilterCtrl"></ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let cliente of filteredclientes | async" [value]="cliente">
+                            {{cliente.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-mini-fab style="margin: 0px 10px" (click)="openUserAddModal()" [hidden]="showOnlyName"
+                    class="mb-4">+</button>
+            </div>
+            <div *ngFor="let data of tableData; let i = index" [hidden]="!showOnlyName">
+                <mat-label style="color: gray; font-size: 12px;">Cliente</mat-label>
+                <h3>{{data?.name}}</h3>
+            </div>
+          
+<mat-dialog-actions align="end" class="cont-btns">
+    <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+    <button mat-flat-button (click)="save()" [disabled]="sending || !obs.valid" color="primary">
+        <span *ngIf="!sending">Guardar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+    </button>
+</mat-dialog-actions>

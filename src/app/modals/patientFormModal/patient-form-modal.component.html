@@ -1,0 +1,57 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Crear Vendedor--</h2>
+</div>
+<mat-dialog-content style="height: 418px;">
+  <form fxLayout="column" [formGroup]="patient">
+    <!-- <perfect-scrollbar fxLayout="column" style="max-height: 424px;padding: 0 18px;"> -->
+    <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Nombre completo</mat-label>
+      <input matInput placeholder="..." formControlName="name" required />
+    </mat-form-field>
+    <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+      <!-- <mat-form-field appearance="outline" class=" mb-4 bold-form" floatLabel="always">
+        <mat-label>Tipo de documento</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="TipoDocumento" required>
+          <mat-option value="1">Cedula</mat-option>
+          <mat-option value="2">Tarjeta de identidad</mat-option>
+          <mat-option value="3">Cedula de extrangeria</mat-option>
+          <mat-option value="4">Pasaporte</mat-option>
+          <mat-option value="5">Registro Civil</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Numero de documento</mat-label>
+        <input matInput placeholder="..." formControlName="identification" required />
+      </mat-form-field>
+    </div>
+   
+    <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="no-pad bold-form" floatLabel="always">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="birthPicker" formControlName="birth_date" placeholder="Seleccione"
+          autocomplete="off" required />
+        <mat-datepicker-toggle matSuffix [for]="birthPicker"></mat-datepicker-toggle>
+        <mat-datepicker #birthPicker></mat-datepicker>
+      </mat-form-field>
+       <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+         <mat-label>Teléfonos</mat-label>
+         <input matInput placeholder="..." formControlName="phone" required />
+       </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput placeholder="..." formControlName="email" required />
+    </mat-form-field>
+    <mat-checkbox formControlName="create_user" required
+      [hidden]="data?.patient?.id !== null && data?.patient?.id !== undefined">Crear Usuario en CTZ
+    </mat-checkbox>
+    <!-- </perfect-scrollbar> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()" [disabled]="sending || !patient.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

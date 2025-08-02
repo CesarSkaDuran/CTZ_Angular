@@ -1,0 +1,174 @@
+
+  <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" class="p-4 bg-white print-block w-100">
+    <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="mb-4 mt-6 mb-9">
+      <h1 class="display-1 font-medium">HISTORIA CLÍNICA</h1>
+      <button mat-flat-button color="primary" (click)="print()" class="ml-4 no-print">Imprimir</button>
+      <div fxFlex></div>
+      <img class="w-200 select-none" fxFlex="none" src="assets/img/logo-sm.png" />
+    </div>
+    <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" fxLayoutGap="8px">
+        <p class="subheading-2 mb-4 font-medium">HISTORIA <span class="text-blue-600">#{{currentRecord.identification}}</span></p>
+        <div fxFlex></div>
+        <p class="subheading-1 mb-0 mt-0"><span class="font-medium">FECHA: </span>{{currentRecord.created_at | date:'dd/MM/yyyy'}}</p>
+        <p class="subheading-1 mb-0 mt-0 ml-7"><span class="font-medium">HORA: </span>{{currentRecord.created_at | date:'shortTime'}}</p>
+    </div>
+    <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="bg-grey-100 mt-4 mb-4 pl-4">
+      <mat-icon [icIcon]="icPerson" class="text-grey-600"></mat-icon>
+      <h4 class="title ml-4 mt-4 mb-4">Datos Personales</h4>
+    </div>
+
+    <div fxLayout="column" class="page-break">
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Paciente: </span>{{currentRecord.patient ? currentRecord.patient.name : 'Sin datos'}}</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Cédula: </span>{{currentRecord.patient ? currentRecord.patient.identification : 'Sin datos'}}</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Sexo: </span>Mujer</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Fecha de nacimiento: </span>{{currentRecord.patient ? (currentRecord.patient.birth_date | date:'dd/MM/yyyy') : 'Sin datos'}}</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Edad: </span>{{ageFromDate(currentRecord.patient ? currentRecord.patient.birth_date : 'Sin datos')}} años</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Estado civil: </span>{{currentRecord.patient ? civilToString(currentRecord.patient.civil_status) : 'Sin datos'}}</p>
+        </div>
+        <mat-divider class="h-130" vertical="true"></mat-divider>
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Correo electrónico: </span>{{currentRecord.patient ? currentRecord.patient.email : 'Sin datos'}}</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Teléfono: </span>{{currentRecord.patient ? currentRecord.patient.phone : 'Sin datos'}}</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Empresa: </span>{{currentRecord.patient ? currentRecord.patient.company : 'Sin datos'}}</p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Pareja: </span>{{currentRecord.patient && currentRecord.patient.partner_name ? currentRecord.patient.partner_name + ' (' + currentRecord.patient.partner_profession + ')' : 'Sin Datos'}}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div fxLayout="column" class="page-break">
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="bg-grey-100 mt-4 mb-4 pl-4">
+        <mat-icon [icIcon]="icAssign" class="text-grey-600"></mat-icon>
+        <h4 class="title ml-4 mt-4 mb-4">Detalles de la historia</h4>
+      </div>
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-secondary">Motivo de la consulta</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.details && currentRecord.details.motive ? currentRecord.details.motive.replace(spaceRegex, '\n') : 'Sin datos'"></textarea>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Menarquia: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.menarche ? currentRecord.details.menarche : 'Sin datos'}}"></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Ciclos: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.cycles ? currentRecord.details.cycles : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">FUR: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_fur ? currentRecord.details.record_fur : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">G: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_g ? currentRecord.details.record_g : 'Sin datos'}}"/></p>
+        </div>
+        <mat-divider class="h-130" vertical="true"></mat-divider>
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">P: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_p ? currentRecord.details.record_p : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">V: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_v ? currentRecord.details.record_v : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">A: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_a ? currentRecord.details.record_a : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">PP: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_pp ? currentRecord.details.record_pp : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">UP: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_up ? currentRecord.details.record_up : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">PRS: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_prs ? currentRecord.details.record_prs : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">FPP: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.record_fpp ? currentRecord.details.record_fpp : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Amenorrea: </span> <input type="text" value="{{currentRecord.details && currentRecord.details.amenorrhea_text ? currentRecord.details.amenorrhea_text : 'Sin datos'}}"/></p>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutGap="12px">
+          <p class="mb-0 mt-0 text-secondary">Citologías</p>
+          <p class="mb-0 mt-0 text-medium" *ngIf="currentRecord.citologies && currentRecord.citologies.length == 0">Ninguna</p>
+          <div *ngFor="let citology of currentRecord.citologies" fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="12px">
+            <p class="mb-0 mt-0 text-secondary">{{citology.date}}</p>
+            <textarea class="mb-0 mt-0 text-medium" [innerHtml]="citology.description.replace(spaceRegex, '\n')"></textarea>
+          </div>
+        </div>
+        <mat-divider class="h-60" vertical="true"></mat-divider>
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutGap="12px">
+          <p class="mb-0 mt-0 text-secondary">Embarazos</p>
+          <p class="mb-0 mt-0 text-medium" *ngIf="currentRecord.pregnancies && currentRecord.pregnancies.length == 0">Ninguno</p>
+          <div *ngFor="let pregnancy of currentRecord.pregnancies" fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="12px">
+            <p class="mb-0 mt-0 text-secondary">{{pregnancy.date}}</p>
+            <textarea class="mb-0 mt-0 text-medium" [innerHtml]="pregnancy.description.replace(spaceRegex, '\n')"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div fxLayout="column" class="page-break">
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="bg-grey-100 mt-4 mb-4 pl-4">
+        <mat-icon [icIcon]="icAssign" class="text-grey-600"></mat-icon>
+        <h4 class="title ml-4 mt-4 mb-4">Antecedentes</h4>
+      </div>
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-secondary">Quirúrgicos</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.conclusion && currentRecord.conclusion.surgical ? currentRecord.conclusion.surgical.replace(spaceRegex, '\n') : 'Sin antecedentes'"></textarea>
+          <p class="mb-0 mt-0 text-secondary">Patológicos</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.conclusion && currentRecord.conclusion.pathological ? currentRecord.conclusion.pathological.replace(spaceRegex, '\n') : 'Sin antecedentes'"></textarea>
+        </div>
+        <mat-divider class="h-130" vertical="true"></mat-divider>
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-secondary">Notas</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.conclusion && currentRecord.conclusion.notes ? currentRecord.conclusion.notes.replace(spaceRegex, '\n') : 'Sin antecedentes'"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" class="page-break">
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="bg-grey-100 mt-4 mb-4 pl-4">
+        <mat-icon [icIcon]="icAssign" class="text-grey-600"></mat-icon>
+        <h4 class="title ml-4 mt-4 mb-4">Examen Físico</h4>
+      </div>
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">TA: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.physical_ta ? currentRecord.physical.physical_ta : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">FC: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.physical_fc ? currentRecord.physical.physical_fc : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Peso: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.weight ? currentRecord.physical.weight : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-secondary">Exámenes Ginecológicos</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.physical && currentRecord.physical.exams ? currentRecord.physical.exams.replace(spaceRegex, '\n') : 'Sin exámenes'"></textarea>
+        </div>
+        <mat-divider class="h-130" vertical="true"></mat-divider>
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Estatura: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.height ? currentRecord.physical.height : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Cabeza: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.head ? currentRecord.physical.head : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Cuello: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.neck ? currentRecord.physical.neck : 'Sin datos'}}"/></p>
+          <p class="mb-0 mt-0 text-medium"><span class="text-secondary">Embarazo: </span> <input type="text" value="{{currentRecord.physical && currentRecord.physical.record_fpp ? currentRecord.physical.record_fpp : 'Sin datos'}}"/></p>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" class="page-break">
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="bg-grey-100 mt-4 mb-4 pl-4">
+        <mat-icon [icIcon]="icAssign" class="text-grey-600"></mat-icon>
+        <h4 class="title ml-4 mt-4 mb-4">Conclusión</h4>
+      </div>
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="24px">
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-secondary">Diagnóstico</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.conclusion && currentRecord.conclusion.diagnosis ? currentRecord.conclusion.diagnosis.replace(spaceRegex, '\n') : 'Sin antecedentes'"></textarea>
+          <p class="mb-0 mt-0 text-secondary">Exámenes</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.conclusion && currentRecord.conclusion.tests ? currentRecord.conclusion.tests.replace(spaceRegex, '\n') : 'Sin antecedentes'"></textarea>
+        </div>
+        <mat-divider class="h-130" vertical="true"></mat-divider>
+        <div fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <p class="mb-0 mt-0 text-secondary">Conducta</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHTML]="currentRecord.conclusion && currentRecord.conclusion.behavior ? currentRecord.conclusion.behavior.replace(spaceRegex, '\n') : 'Sin antecedentes'">
+          </textarea>
+          <p class="mb-0 mt-0 text-secondary">Procedimiento</p>
+          <textarea class="mb-0 mt-0 text-medium" [innerHtml]="currentRecord.conclusion && currentRecord.conclusion.process ? currentRecord.conclusion.process.replace(spaceRegex, '\n') : 'Sin antecedentes'"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" class="page-break" *ngIf="currentRecord.evolutions && currentRecord.evolutions.length > 0" fxLayoutGap="24px">
+      <div fxLayout="row" fxFlex.gt-xs fxLayoutAlign="start center" class="bg-grey-100 mt-4 mb-4 pl-4">
+        <mat-icon [icIcon]="icAssign" class="text-grey-600"></mat-icon>
+        <h4 class="title ml-4 mt-4 mb-4">Evolución del paciente</h4>
+      </div>
+      <div *ngFor="let evolution of currentRecord.evolutions" fxLayout="column" fxFlex.gt-xs fxLayoutAlign="start start" fxLayoutGap="6px">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+          <p class="mb-0 mt-0 text-secondary">{{evolution.date}}</p>
+          <p class="mb-0 mt-0 text-blue-600" [hidden]="!evolution.mona">Monalisa</p>
+          <p class="mb-0 mt-0 text-blue-600" [hidden]="!evolution.rejuv">Rejuvchip</p>
+        </div>
+        <textarea class="mb-0 mt-0 text-medium" [innerHtml]="evolution.details.replace(spaceRegex, '\n')"></textarea>
+      </div>
+    </div>
+    <!-- <div fxLayout="column" class="page-break"></div> -->
+    <div fxLayout="column" class="page-break">
+    </div>
+  </div>
+

@@ -1,0 +1,17 @@
+button{
+    background-color: #ffcc00;
+    color: #383838;
+}
+button:hover{
+    background-color: #383838;
+    color: #fff;
+}
+
+.cont-btns{
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-end;
+}
+.cont-btns button{
+    margin-left: 8px;
+}

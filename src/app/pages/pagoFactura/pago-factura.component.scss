@@ -1,0 +1,62 @@
+section{
+    padding: 20px;
+}
+
+.cabecera h2{
+    font-size: 16px;
+    color: #383838;
+}
+
+h2{
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0px 0px;
+    color: #383838;
+    line-height: 22px;
+}
+
+table{
+    width: min-content;
+    background-color: none;
+    width: 100%;
+}
+th, td{
+    border: solid .5px #000;
+    background-color: none;
+}
+
+table tr td, table tr th{
+    padding: 5px;
+}
+
+hr{
+    border: 1px solid;
+}
+
+.cabecera{
+    padding: 30px 0px;
+    text-align: left;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.cabecera img{
+    height: auto;
+    margin: 20px auto;
+}
+
+.tabla-pago th, .tabla-pago td{
+    width: 20%;
+}
+
+@media print
+{    
+    .btn-imprimir
+    {
+        display: none !important;
+    }
+    .formulario{
+        display: none !important;
+    }
+}

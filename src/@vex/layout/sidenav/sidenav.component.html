@@ -1,0 +1,102 @@
+<div (mouseenter)="onMouseEnter()"
+     (mouseleave)="onMouseLeave()"
+     [class.collapsed]="collapsed1"
+     [class.open]="collapsed1 && collapsedOpen$ | async"
+     class="sidenav flex flex-col">
+  <div class="sidenav-toolbar flex-none flex items-center">
+    <img [src]="imageUrl$ | async" class="select-none flex-none">
+    <h2 class="title ltr:pl-4 rtl:pr-4 select-none flex-auto">{{ title$ | async }}</h2>
+    <button (click)="toggleCollapse()"
+            *ngIf="showCollapsePin$ | async"
+            class="w-8 h-8 -mr-2 leading-none flex-none lg:block"
+            mat-icon-button
+            type="button" style="position: absolute;top: 14px;right: 30px;">
+        <mat-icon *ngIf="!collapsed1" [icIcon]="icRadioButtonChecked" size="14px"></mat-icon>
+        <mat-icon *ngIf="collapsed1" [icIcon]="icRadioButtonUnchecked" size="14px"></mat-icon>
+    </button>
+  </div>
+
+  <vex-scrollbar class="flex-auto">
+    <div class="sidenav-items" [hidden]="!!currentPatient">
+        <vex-sidenav-item *ngFor="let item of items; trackBy: trackByRoute" [item]="item" [level]="0"></vex-sidenav-item>
+    </div>
+
+    <div class="sidenav-items" fxFlex="auto" vexScrollbar [hidden]="!currentPatient">
+      <div fxLayout="row" fxLayoutAlign="start center" class="quick-options">
+        <button mat-icon-button (click)="back()">
+          <mat-icon [icIcon]="icBack"></mat-icon>
+        </button>
+        <div fxFlex></div>
+        <button mat-icon-button (click)="toPrint()">
+          <mat-icon class="text-grey-600" [icIcon]="icPrint"></mat-icon>
+        </button>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <button mat-button color="primary" class="ligth-btn" (click)="openPatient(currentPatient)">
+            Editar
+          </button>
+          <button mat-button color="warn" class="ligth-btn" (click)="openPatient(currentPatient)">
+            Eliminar
+          </button>
+        </div>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" class="basic">
+        <div class="user-avatar" (click)="openPhotoModal(currentPatient)">
+          <img
+            [src]="currentPatient && currentPatient.profile_url && currentPatient.profile_url != '' ? currentPatient.profile_url : '/assets/images/default-patient.jpg'"
+            alt="" class="w-150">
+        </div>
+        <h3 class="title mb-4 center">{{ currentPatient ? currentPatient.name : '' }}</h3>
+        <span class="subheading-1 text-blue-500 font-medium">{{ currentPatient ? currentPatient.position : '' }}</span>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" class="mt-4">
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Fecha de N.</span>
+          <span class="subheading-1 font-medium">{{ currentPatient ? (currentPatient.birth_date | date: 'dd/MM/yyyy') : '' }}</span>
+        </div>
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Edad</span>
+          <span class="subheading-1 font-medium">{{ currentPatient ? ageFromDate(currentPatient.birth_date) : '' }} años</span>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" class="mt-4">
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Teléfono</span>
+          <span class="subheading-1 font-medium">{{ currentPatient ? currentPatient.phone : '' }}</span>
+        </div>
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">E. Civil</span>
+          <span class="subheading-1 font-medium">{{ currentPatient ? civilToString(currentPatient.civil_status) : '' }}</span>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" class="mt-4">
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Empresa</span>
+          <span class="subheading-1 font-medium">{{ currentPatient ? currentPatient.company : '' }}</span>
+        </div>
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Cédula</span>
+          <span class="subheading-1 font-medium">{{ currentPatient ? currentPatient.identification : '' }}</span>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" class="mt-4">
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Email</span>
+          <span class="subheading-1 font-medium lower-case">{{ currentPatient && currentPatient.email ? currentPatient.email: 'Sin datos' }}</span>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" class="mt-4">
+        <div fxLayout="column" fxFlex fxLayoutAlign="start center" class="property">
+          <span class="body-1 text-secondary">Pareja</span>
+          <span class="subheading-1 font-medium">{{ currentPatient && currentPatient.partner_name != '' ? currentPatient.partner_name : 'Sin datos' }}</span>
+          <span class="subheading-1 font-medium text-blue-500">{{ currentPatient ? currentPatient.partner_profession : '' }}</span>
+        </div>
+      </div>
+    </div>
+  </vex-scrollbar>
+
+  <div fxLayout="row" fxLayoutAlign="center center" class="p-3 m-4 contact-menu-item">
+<span class="text-secondary text-center mb-0 mr-2 text-white" [hidden]="collapsed1">¿Necesitas ayuda? :)</span>
+    <a href="https://wa.link/awltv2" target="_blank" class=""><img src="/assets/images/ws-btn.png" alt="Whatsapp"
+        width="34px"></a>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+
+<section class="example-section" style="margin-top: 50px; margin-bottom:  50px; padding-left: 20px; padding-right: 20px;">
+    <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+                    fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+                    fxLayoutGap.xs="12px" [formGroup]="filters">
+
+        <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;"
+                        class="bold-form " floatLabel="always">
+            <mat-label>Fecha Inicial</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha"
+                autocomplete="off" (dateChange)="dateChange($event)" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;" class="blue no-pad bold-form" floatLabel="always">
+            <mat-label>Fecha Final</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="date2" placeholder="Rango de fecha"
+                            autocomplete="off" (dateChange)="dateChange($event)" />
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+    </form>
+</section>
+
+<div *ngIf="cargando == true" style="display: flex;justify-content: center;">
+    <mat-spinner [diameter]="50"></mat-spinner>
+</div>
+
+<div class="cont-grid" *ngIf="cargando == false">
+    <div class="h-96 cont-grafico">
+        <ngx-charts-advanced-pie-chart
+            class="grafico"
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="data_gr1"
+            [gradient]="gradient"
+            (select)="onSelect($event)"
+            (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)"
+        >
+        </ngx-charts-advanced-pie-chart>
+    </div>
+    
+    <div class="h-96 cont-grafico">
+        <ngx-charts-bar-horizontal
+        class="grafico"
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="data_gr2"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [showDataLabel]="true"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)">
+        </ngx-charts-bar-horizontal>
+    </div>
+</div>
+
+<div class="cont-grid" *ngIf="cargando == false">
+
+
+    <div class="h-96 cont-grafico">
+        <ngx-charts-advanced-pie-chart
+            class="grafico"
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="data_gr4"
+            [gradient]="gradient"
+            (select)="onSelect($event)"
+            (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)"
+        >
+        </ngx-charts-advanced-pie-chart>
+    </div>
+
+
+    <div class="h-96 cont-grafico">
+        <ngx-charts-bar-horizontal
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="data_gr3"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [showDataLabel]="true"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)">
+        </ngx-charts-bar-horizontal>
+    </div>
+    
+</div>

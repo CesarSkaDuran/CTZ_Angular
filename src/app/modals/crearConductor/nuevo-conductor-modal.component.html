@@ -1,0 +1,55 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title *ngIf="!id_conductor" class="title text-black-600">Nuevo Conductor</h2>
+    <h2 mat-dialog-title *ngIf="id_conductor" class="title text-black-600">Modificar Conductor</h2>
+</div>
+<!--<button mat-stroked-button (click)="openNewPatient()" color="primary" class="mt-1" [hidden]="showOnlyName">Nuevo Paciente</button>-->
+<mat-dialog-content style="height: 500px;">
+    <form fxLayout="column" fxFlex.gt-xs [formGroup]="usr">
+
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Nombre</mat-label>
+                <input [(ngModel)]="nombre" matInput placeholder="..." formControlName="name" />
+            </mat-form-field>
+        </div>
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Documento</mat-label>
+                <input [(ngModel)]="cedula" matInput  placeholder="..." formControlName="cedula" />
+            </mat-form-field>
+        </div>
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Placa</mat-label>
+                <input [(ngModel)]="placa" matInput placeholder="..." formControlName="placa" />
+            </mat-form-field>
+        </div>
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Teléfono</mat-label>
+                <input [(ngModel)]="telefono" matInput type="number" placeholder="..." formControlName="telefono" />
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Email</mat-label>
+                <input [(ngModel)]="email" matInput type="email" placeholder="..." formControlName="email" />
+            </mat-form-field>
+        </div>
+
+        <div [hidden]="id_conductor" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2;">
+                <mat-label>Contraseña</mat-label>
+                <input matInput type="password" placeholder="..." formControlName="password" />
+            </mat-form-field>
+        </div>
+
+
+        <div class="cont-btns">
+            <button mat-button (click)="close()">Cancelar</button>
+            <button mat-button *ngIf="!id_conductor" (click)="save()" [disabled]="sending || !usr.valid">Crear</button>
+            <button mat-button *ngIf="id_conductor" (click)="save()" [disabled]="sending || !usr.valid">Modificar</button>
+        </div>
+    </form>
+</mat-dialog-content>

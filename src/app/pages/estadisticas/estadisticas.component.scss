@@ -1,0 +1,18 @@
+.cont-grid{
+    display: flex;
+    flex-direction:row;
+    justify-content: space-around;
+}
+  
+@media (max-width: 1550px) {
+    .cont-grid{
+        flex-direction:column;
+    }
+    .cont-grafico{
+        overflow-x: scroll;
+    }
+  }
+  
+
+  
+  

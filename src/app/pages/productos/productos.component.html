@@ -1,0 +1,108 @@
+<vex-page-layout @stagger>
+    <vex-page-layout-content fxLayout="column">
+
+        <div class="card overflow-auto mt-5 "
+            style="box-shadow: var(--elevation-z0);border: 0px solid rgba(0, 0, 0, 0.125);">
+            <div fxLayout="row" fxFlex fxLayoutAlign="center stretch" fxLayoutGap="8px"
+                [ngClass]="{'hidden': !alertIsVisible}" class="p-6 mt-6" style="border-radius: 4px;position:relative;">
+
+                <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="end" fxLayoutAlign.sm="end end"
+                    fxItemAlign="end" fxItemAlign.xs="end" fxLayoutGap="50px" fxLayoutGap.xs="50px"
+                    [formGroup]="filters">
+                    <button mat-flat-button color="primary" (click)="openProductModal()"
+                        [ngStyle]="{'display': userPermisoStatus() == 2 ?'none' : userPermisoStatus() == 0 ? 'none' : ''
+                        }"
+                        class=" celda_bt buttom_1">Agregar Producto +</button>
+                </form>
+            </div>
+            <!-- table -->
+      
+        </div>
+
+ 
+
+                                         
+      <div fxLayout="row" fxflex class="p-4 table-controls" fxLayoutGap="8px">
+        <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+            fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+            fxLayoutGap.xs="12px" [formGroup]="filters">
+
+            <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;" class="bold-form"
+                floatLabel="always">
+                <mat-label>Cliente</mat-label>
+                <input matInput (keyup)="searchKeyUp($event)" #search placeholder="Nombre del  Cliente..."
+                    formControlName="search" />
+            </mat-form-field>
+        </form>
+    </div>
+
+
+  
+          <table @stagger [dataSource]="dataProductos " class="w-full" (matSortChange)="sortRecords($event)" mat-table
+              matSort>
+              <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                  <td mat-cell *matCellDef="let row" class="">
+                      {{row.id}}
+                  </td>
+              </ng-container>
+              <!-- Type Column -->
+              <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+                  <td mat-cell *matCellDef="let row" class="pl-0">
+                      {{row.nombre}}
+                  </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="codigo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+                  <td mat-cell *matCellDef="let row" class="pl-0">
+                      {{row.codigo}}
+                  </td>
+              </ng-container> -->
+              <ng-container matColumnDef="precio">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+                  <td mat-cell *matCellDef="let row" class="pl-0">
+                      {{row.precio | currency}}
+                  </td>
+              </ng-container>
+              <ng-container matColumnDef="unidad_medida">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidad de Medida</th>
+                  <td mat-cell *matCellDef="let row" class="pl-0">
+                      {{row.unidad_medida}}
+                  </td>
+              </ng-container>
+              <!--
+              <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Registro</th>
+                  <td mat-cell *matCellDef="let row" class="pl-0 text-secondary">
+                      {{row.created_at | date:'yyyy-MM-dd'}}
+                  </td>
+              </ng-container>
+              -->
+              <ng-container matColumnDef="options">
+                  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                  <td mat-cell *matCellDef="let row" class="no-pad">
+                      <button
+                          [ngStyle]="{'display': userPermisoStatus() == 2 ?'none' :  userPermisoStatus() == 0 ? 'none' : '' }"
+                          mat-icon-button type="button" (click)="openProductModal(row.id)">
+                          <mat-icon [icIcon]="edit" color="c-azul"></mat-icon>
+                      </button>
+                      <button
+                      [ngStyle]="{'display': userPermisoStatus() == 2 ?'none' :  userPermisoStatus() == 0 ? 'none' : '' }"
+                      mat-icon-button type="button" (click)="delete(row)">
+                      <mat-icon [icIcon]="baselineDeleteForever" color="red"></mat-icon>
+                  </button>
+                  </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+  
+      <mat-paginator [length]="resultsLength" (page)="pageChange($event)" [pageSizeOptions]="pageSizeOptions"
+          [pageSize]="pageSize" class="sticky left-0">
+      </mat-paginator>
+
+
+    </vex-page-layout-content>
+</vex-page-layout>

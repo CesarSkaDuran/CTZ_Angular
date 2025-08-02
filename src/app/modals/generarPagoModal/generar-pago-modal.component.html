@@ -1,0 +1,63 @@
+<section class="cont-modal">
+    <div>
+        <div class="titulo-modal">
+          <h2>Pago</h2>
+        </div>
+  
+        <div>
+            <form [formGroup]="clienteFormGroup">
+
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Fecha</mat-label>
+                            <input matInput [(ngModel)]="dia_actual" [matDatepicker]="datePicker" formControlName="fecha" placeholder="Seleccione" autocomplete="off"
+                        required />
+                        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #datePicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <!--
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Modo pago</mat-label>
+                        <mat-select formControlName="modo_pago">
+                            <mat-option *ngFor="let banco of dataBancos" [value]="banco.id">{{banco.nombre}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>-->
+
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Modo de pago</mat-label>
+                        <input matInput type="text" placeholder="..." formControlName="modo_pago"/>
+                    </mat-form-field>
+                </div>
+                
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Valor</mat-label>
+                        <input matInput type="text" placeholder="..." formControlName="valor"/>
+                    </mat-form-field>
+                </div>
+
+                <div class="linea-form">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form items-form" floatLabel="always" style="flex-grow: 2">
+                        <mat-label>Observacion</mat-label>
+                        <textarea matInput 
+                        placeholder="..."
+                        formControlName="observacion">
+                        </textarea>
+                    </mat-form-field>
+                </div>
+
+            </form>
+        </div>
+    </div>
+  
+    <div class="cont-btns-modal">
+        <button class="btn btn-azul" (click)="saveDetallePago()">Imprimir</button><!--(click)="insertarCliente()-->
+    </div>
+  
+  </section>
+  

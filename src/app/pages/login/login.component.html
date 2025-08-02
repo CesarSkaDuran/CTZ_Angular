@@ -1,0 +1,98 @@
+<div class="w-full h-full" fxLayout="row" fxLayoutAlign="stretch">
+  <div fxFlex="450px" style="height: auto;" class="cell_1" fxLayoutAlign="center">
+    <div @fadeInUp class="overflow-hidden w-full h-full max-w-sm" fxLayout="column" fxFlex>
+      <div class="p-6 mt-16 mb-4 pb-0" fxLayout="column" fxLayoutAlign="center center">
+        <div class="fill-current text-center">
+          <img class="pt-18" src="assets/img/logo.png" width="200px" />
+        </div>
+      </div>
+
+      <div class="text-center mt-8">
+        <h2 class="title mb-1">Ingresa a tu cuenta</h2>
+        <h2 class="subheading-2 text-blue m-0">Sigue ganando tiempo y tranquilidad</h2>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="p-6 pl-8 pr-8 pb-0" fxLayout="column">
+        <div fxFlex="auto" fxLayout="column">
+          <mat-form-field fxFlex="grow" appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input formControlName="email" matInput required />
+            <mat-error *ngIf="loginForm.get('email').invalid">{{ getErrorMessage() }}</mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="grow" appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input [type]="inputType" formControlName="password" matInput required />
+            <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button" fxLayoutAlign="center center">
+              <mat-icon *ngIf="visible" [icIcon]="icVisibility" style="font-size: 22px;"></mat-icon>
+              <mat-icon *ngIf="!visible" [icIcon]="icVisibilityOff" style="font-size: 22px;"></mat-icon>
+            </button>
+            <mat-hint>Clic en el ojo para cambiar la visibilidad</mat-hint>
+            <mat-error *ngIf="loginForm.get('password').invalid">La contraseña es necesaria para acceder</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- <div fxLayout="row" fxLayoutAlign="space-between center">
+          <mat-checkbox class="caption" color="primary">Recordarme</mat-checkbox>
+          <a href="#" class="caption">¿Olvidó su contraseña?</a>
+        </div> -->
+
+        <div class="text-red" [hidden]="!error">{{ errorMsg }}</div>
+
+        <button color="primary" mat-flat-button type="submit" [disabled]="isLoading" class="mt-4">
+          <span [hidden]="isLoading">
+            INGRESAR
+          </span>
+          <div [hidden]="!isLoading" class="spin-box">
+            <div fxLayout="row" fxLayoutAlign="center center">
+              <span>
+                INGRESAR
+              </span>
+              <mat-spinner class="btn-spin" diameter="20"></mat-spinner>
+            </div>
+          </div>
+        </button>
+
+        <div fxLayout="row" fxLayoutAlign="center center" class="mt-5 mb-4">
+          <a href="#" class="text-blue">¿Olvidó su contraseña?</a>
+        </div>
+  
+        <hr>
+      </form>
+
+      <p class="text-secondary text-center mt-5">
+        ¿Aún no tienes una cuenta? <a href="#" class="text-blue">CREAR CUENTA</a>
+      </p>
+
+      <span fxFlex></span>
+
+      <div fxLayout="row" fxLayoutAlign="center center" class="mb-8">
+        <span class="text-secondary text-center mb-0 mr-2">¿Necesitas ayuda?</span>
+        <a href="https://wa.link/awltv2" target="_blank" class=""><img src="/assets/images/ws-btn.png" alt="Whatsapp" width="34px"></a>
+      </div>
+    </div>
+  </div>
+
+  <div fxFlex fxLayout="column" class="login-slider none_cell" style="background:grey;background-image: url(/assets/img/3.jpg);background-position: center;background-repeat: no-repeat;background-size: cover;">
+    <div></div>
+    <div fxFlex fxLayout="column" fxLayoutAlign="center start" class="w-50 pl-20">
+      <h2 class="display-2 text-white mb-5">Somos productores a nivel industrial</h2>
+      <h3 class="title text-white">de todo tipo concretos y agregados pétreos para la construcción.</h3>
+      <a (click)="openVideoModal()" class="pl-6 pr-6 pt-3 pb-3 font-bold mt-6" fxLayout="row" fxLayoutAlign="center center" style="border-radius:36px;cursor:pointer; background-color: #ffcc00; color: #383838;">
+        <mat-icon [icIcon]="icPlay" style="font-size: 24px;"></mat-icon> <span class="ml-1 pt-1">VER VIDEO</span>
+      </a>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center" class="p-8">
+      <span fxFlex></span>
+      <span class="text-white">Síguenos en nuestras redes sociales</span>
+      <a href="#" target="_blank" class="text-white ml-3">
+        <mat-icon [icIcon]="faTwitter" style="font-size: 24px;"></mat-icon>
+      </a>
+      <a href="#" target="_blank" class="text-white ml-3">
+        <mat-icon [icIcon]="faFacebook" style="font-size: 24px;"></mat-icon>
+      </a>
+      <a href="#" target="_blank" class="text-white ml-3">
+        <mat-icon [icIcon]="faInstagram" style="font-size: 24px;"></mat-icon>
+      </a>
+    </div>
+  </div>
+</div>

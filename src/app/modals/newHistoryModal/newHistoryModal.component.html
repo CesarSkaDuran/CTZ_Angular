@@ -1,0 +1,66 @@
+<div class="container" *ngFor="let data of tableData; let i = index">
+    <div class="row" fxLayoutAlign="flex-end">
+        <button style="background-color: #ffffff;" mat-flat-button (click)="close()" class="celda_bt">
+            <mat-icon [icIcon]="roundHighlightOff" color="red" >
+            </mat-icon>
+        </button>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+        <h2 style="color:rgb(0, 174, 255)" mat-dialog-title class="title text-black-600">DATOS DEL ESPECIALISTA</h2>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Nombre del Paciente</h3>
+        <h3 style="color: black;">{{data.name}}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Cedula</h3>
+        <h3 style="color: black;">{{data.reason}}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>correo</h3>
+        <h3 style="color: black;">{{ data.date }}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Ciudad</h3>
+        <h3 style="color: black;">Cúcuta</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between end">
+        <h3>Telefono</h3>
+        <h3 style="color: black;">
+           {{data.phone_confirmation}}
+        </h3>
+    </div>
+</div>
+    <br>
+<hr>
+    <br>
+<div class="container" *ngFor="let data of tableData; let i = index">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+        <h2 style="color:rgb(0, 174, 255)" mat-dialog-title class="title text-black-600">DATOS DE LA CITA</h2>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Dia</h3>
+        <h3 style="color: black;">{{data.date}}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Hora</h3>
+        <h3 style="color: black;">{{data.time}}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Tipo</h3>
+        <h3 style="color: black;">{{ data.type == 1 ? "PRESENCIAL":"VIRTUAL" }}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between center">
+        <h3>Motivo</h3>
+        <h3 style="color: black;">{{data.reason}}</h3>
+    </div>
+    <div class="container row" fxLayoutAlign="space-between end">
+        <h3>Estado</h3>
+        <h3 style="color: black;">
+            {{ data.status == 1 ? "Agendada":"" }}
+            {{ data.status == 2 ? "Por confirmar":"" }}
+            {{ data.status == 3 ? "finalizada":"" }}
+            {{ data.status == 4 ? "cancelada":"" }}
+        </h3>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title class="title text-black-600" >Editar Producto</h2>
+</div>
+
+<mat-dialog-content >
+    <form fxLayout="column" fxFlex.gt-xs [formGroup]="usr">
+        <mat-form-field style="width: 100%; margin-top: 30px;" appearance="outline" class="mb-4 bold-form" floatLabel="always">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado" required>
+                <mat-option [value]=1>En mora</mat-option>
+                <mat-option [value]=2>Pagado</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button (click)="saveCredito()">Guardar</button>
+    </form>
+</mat-dialog-content>

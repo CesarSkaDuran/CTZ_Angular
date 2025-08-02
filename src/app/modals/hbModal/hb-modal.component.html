@@ -1,0 +1,68 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+  <div fxLayout="column" fxFlex="42" fxLayoutAlign="start stretch" class="sideform">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <h3 class="title">Hb</h3>
+      <div fxFlex></div>
+      <button mat-icon-button (click)="reset()">
+        <mat-icon [icIcon]="icAdd"></mat-icon>
+      </button>
+    </div>
+    <form fxLayout="column" fxFlex [formGroup]="hb">
+      <mat-form-field appearance="outline" class="blue no-pad bold-form" floatLabel="always">
+        <mat-label>Fecha</mat-label>
+        <input
+          matInput
+          [matDatepicker]="datePicker"
+          formControlName="date"
+          placeholder="Seleccione"
+          autocomplete="off"
+        />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex class="blue bold-form mt-12" floatLabel="always">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          matAutosize
+          matTextareaAutosize
+          formControlName="description"
+          value=""
+          cdkAutosizeMinRows="8"
+        ></textarea>
+      </mat-form-field>
+      <div fxFlex></div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div fxFlex></div>
+        <button mat-stroked-button color="warn" *ngIf="selected" (click)="delete()">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-stroked-button class="ml-12" (click)="close()">Cerrar</button>
+        <button mat-flat-button color="primary" class="ml-12" (click)="add()" [disabled]="sending || !hb.valid">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+  <div fxLayout="column" fxFlex="58" fxLayoutAlign="start stretch" class="sideregs ml-16">
+    <h3 class="title ml-12 grey">Registros ({{ items.length }})</h3>
+    <!-- <perfect-scrollbar fxLayout="column" style="max-height: 402px;"> -->
+      <div
+        *ngFor="let hb of items"
+        class="reg"
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        (click)="select(hb)"
+        [class.selected]="selected && selected.id == hb.id"
+      >
+        <div class="icon">
+          <mat-icon [icIcon]="icAssignment"></mat-icon>
+        </div>
+        <div fxLayout="column" fxFlex fxLayoutAlign="start stretch">
+          <p>{{ hb.description }}</p>
+          <p class="date">{{ hb.date | date }}</p>
+        </div>
+      </div>
+    <!-- </perfect-scrollbar> -->
+  </div>
+</div>

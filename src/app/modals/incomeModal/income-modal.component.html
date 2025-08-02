@@ -1,0 +1,37 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Ingreso</h2>
+</div>
+<mat-dialog-content style="height: 360px;">
+  <form fxLayout="column" fxFlex.gt-xs [formGroup]="obs">
+
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Concepto</mat-label>
+      <input matInput placeholder="..." formControlName="concept" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Empresa</mat-label>
+      <input matInput placeholder="..." formControlName="company" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Fecha</mat-label>
+      <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Seleccione" autocomplete="off"
+        required />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Valor</mat-label>
+      <input matInput type="number" min="0" placeholder="..." formControlName="value" required />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()" [disabled]="sending || !obs.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

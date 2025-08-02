@@ -1,0 +1,8 @@
+<div class="cont-info">
+    <div class="cont-img-perfil">
+        <img *ngIf="!photo" src="/assets/images/default_perfil.jpg" alt="foto de perfil">
+        <img *ngIf="photo" [src]="user_id ? path_usuarios : cliente_id ? path_clientes : conductor_id ? path_conductor : '/assets/images/default_perfil.jpg'" alt="foto de perfil">
+        <div (click)="subirImagen()" class="agregar"><mat-icon class="c-azul" [icIcon]="camera"></mat-icon></div>
+    </div>
+    <h1>{{nombre}}</h1>
+</div>
