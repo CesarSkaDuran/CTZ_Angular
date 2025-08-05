@@ -115,7 +115,8 @@ export class AppointmentDetailComponent implements OnInit, AfterViewInit, OnDest
     get googleMapsUrl(): string {
         if (this.data.appointment.coordenadas != '' &&
             this.data.appointment.coordenadas != null &&
-            this.data.appointment.coordenadas != 'null'
+            this.data.appointment.coordenadas != 'null' &&
+            this.data.appointment.coordenadas != '0' 
          )
         {
             const coords = this.data.appointment.coordenadas
