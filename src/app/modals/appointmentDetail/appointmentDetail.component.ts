@@ -175,7 +175,7 @@ export class AppointmentDetailComponent implements OnInit, AfterViewInit, OnDest
             observaciones: new FormControl({ value: '', disabled: this.role != 'Administrador' }, []),
             tipo_descarga: new FormControl({ value: '', disabled: this.role != 'Administrador' }, []),
             dias_pago: new FormControl({ value: '', disabled: this.role != 'Administrador' }, [Validators.required]),
-            coordenadas: new FormControl({ value: '', disabled: this.role != 'Administrador' }, [Validators.required]),
+            coordenadas: new FormControl({ value: '', disabled: this.role != 'Administrador' }, []),
             imagen: new FormControl({ value: '', disabled: this.role != 'Administrador' }, []),
         });
         if (this.data.appointment) {
