@@ -243,16 +243,16 @@ export class AppointmentDetailComponent implements OnInit, AfterViewInit, OnDest
             cliente: new FormControl(dis(!esAdmin)),
             metros: new FormControl(dis(esConsulta && !esProgramador), [Validators.required]),
             type_concreto: new FormControl(dis(!esAdmin)),
-            direccion: new FormControl(dis(!esAdmin), [Validators.required]),
+            direccion: new FormControl(dis(!esAdmin && !esProgramador), [Validators.required]),
             vendedor: new FormControl({ value: 'sin vendedor', disabled: !esAdmin }),
             conductor: new FormControl({ value: 'sin conductor', disabled: !esAdmin }),
-            observaciones: new FormControl(dis(!esAdmin)),
-            tipo_descarga: new FormControl(dis(!esAdmin)),
+            observaciones: new FormControl(dis(!esAdmin && !esProgramador)),
+            tipo_descarga: new FormControl(dis(!esAdmin && !esProgramador)),
             dias_pago: new FormControl(dis(!esAdmin), [Validators.required]),
             coordenadas: new FormControl(dis(!esAdmin)),
             imagen: new FormControl(dis(!esAdmin)),
         });
-        
+
         if (this.data?.appointment) {
             const ap = this.data.appointment;
             this.obs.setValue({
