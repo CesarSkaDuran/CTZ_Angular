@@ -102,8 +102,8 @@ export class AppointmentComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.loadPedidos();
-
+    this.loadPedidos(this.role);
+    console.log('this.role ',this.role)
 
     //this.loadRecords();
   }
@@ -141,10 +141,19 @@ export class AppointmentComponent implements OnInit, AfterViewInit {
   }
 
 
-  loadPedidos(){
+  loadPedidos(role: any){
+    let queryParams = "";
+    
+    if (role == "Vendedor")
+    {
+       queryParams = `search:""`;
+    }
+    else{
+       queryParams = `search:""`;
+    }
     //const queryParams = `fecha:"${moment('2022-08-07').format('YYYY-MM-DD')}",fecha2:"${moment('2022-09-07').format('YYYY-MM-DD')}"`;
-    const queryParams = `search:""`;
-    const queryProps = 'id,date,time,end_time,name,value,status,metros,direccion,observaciones,type_concreto,vendedor,conductor,tipo_descarga,status,fecha_pago,coordenadas, imagen';
+   
+    const queryProps = 'id,user_id, date,time,end_time,name,value,status,metros,direccion,observaciones,type_concreto,vendedor,conductor,tipo_descarga,status,fecha_pago,coordenadas, imagen';
 
     this.apiService.getPedido(queryParams, queryProps).subscribe(
       (response: any) => {
@@ -241,7 +250,7 @@ export class AppointmentComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (!result) return;
 
-      this.loadPedidos();
+      this.loadPedidos(this.role);
       //this.loadRecords();
     });
   }
@@ -256,7 +265,7 @@ export class AppointmentComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (!result) return;
-      this.loadPedidos();
+      this.loadPedidos(this.role);
       //this.loadRecords();
     });
   }
@@ -274,7 +283,7 @@ export class AppointmentComponent implements OnInit, AfterViewInit {
       if (!result) return;
 
       //this.loadRecords();
-      this.loadPedidos();
+      this.loadPedidos(this.role);
       //console.log(result);
     });
   }

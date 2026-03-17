@@ -48,12 +48,6 @@
                     class="mb-4"><ic-icon [icon]="baselineAutorenew" inline="true" size="24px" class=""></ic-icon></button>
             </div>
             <br>
-
-           
-            <!--
-        <button mat-stroked-button (click)="openNewPatient()" color="primary" class="mt-1" [hidden]="showOnlyName">Nuevo Paciente</button>
-      -->
-
             <mat-label [hidden]="!showOnlyName" style="color: gray; font-size: 12px;">Tipo de concreto</mat-label>
             <div class="row" style="display: flex;" *ngFor="let data of tableData; let i = index"
                 [hidden]="!showOnlyName">
@@ -62,7 +56,6 @@
                     *ngIf="this.role === 'Administrador'"
                     (click)="selectNewProducto(data)" [hidden]="!showOnlyName" class="mb-4"><ic-icon [icon]="baselineAutorenew" inline="true" size="24px" class=""></ic-icon></button>
             </div>
-
             <mat-label [hidden]="!showOnlyName" style="color: gray; font-size: 12px;">Vendedor</mat-label>
             <div class="row" style="display: flex;" *ngFor="let data of tableData; let i = index"
                 [hidden]="!showOnlyName">
@@ -82,8 +75,6 @@
                       
               </div>
             <br>
-
-
             <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
                 <mat-form-field  appearance="outline"
                     fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
@@ -91,8 +82,6 @@
                     <input matInput type="number" placeholder="..."  formControlName="metros" required />
                 </mat-form-field>
             </div>
-
-
             <mat-form-field  appearance="outline"
                 fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always" style="flex-grow: 2;">
                 <mat-label>Direccion entrega</mat-label>
@@ -119,21 +108,8 @@
             </mat-form-field>
             <div class="mt-4">
               <div class="w-full h-96">
-                <!-- <iframe
-                    [src]="googleMapsEmbedUrl"
-                    width="100%"
-                    height="100%"
-                    style="border:0;"
-                    allowfullscreen
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe> -->
-
                 </div>
-
-
             </div>
-
         </div>
 
         <div fxLayout="column" fxFlex.gt-xs class="p-3" style="padding-top: 26px;">
@@ -206,7 +182,7 @@
                 <button [hidden]="showOnlyName" (click)="openNewPatient()" mat-mini-fab
                     style="margin: 0px 10px"><ic-icon [icon]="baselineAutorenew" inline="true" size="24px" class=""></ic-icon></button>
             </div>
-            <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div *ngIf=" this.role === 'Administrador'" style="display: flex; flex-direction: row; flex-wrap: wrap;">
                 <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-1 bold-form" floatLabel="always"
                     style="flex-grow: 2;">
                     <mat-label>Coordenadas</mat-label>
@@ -215,22 +191,14 @@
                 <a [href]="googleMapsUrl" target="_blank" rel="noopener">
                     <img src="https://apictz.trituradoselzulia.com/img/maps_96in128dp.png" alt="Google Maps" width="56" height="24" />
                 </a>
-
             </div>
-
-            <mat-label>Imagen o documento</mat-label>
-                <!-- <input type="file"
-                    accept="image/*,application/pdf"
-                    (change)="onFileSelected($event)"
-                    capture="environment"
-                    class="custom-file-input mt-2" /> -->
-
-                <!-- Vista previa -->
-                <div *ngIf="previewImage">
-                <!-- previewImage solo es el contenido base64 -->
-                     <img [src]="previewImageSafeUrl" alt="Vista previa" style="max-width: 100%; margin-top: 10px;" />
-                <!-- <button type="button" (click)="removeImage()" class="text-red-600 mt-2 underline">Eliminar imagen</button> -->
-                </div>
+            
+            <div *ngIf=" this.role === 'Administrador'">
+                <mat-label>Imagen o documento</mat-label>
+                    <div *ngIf="previewImage">
+                         <img [src]="previewImageSafeUrl" alt="Vista previa" style="max-width: 100%; margin-top: 10px;" />
+                    </div>
+            </div>
 
 
         </div>
@@ -246,5 +214,4 @@
 </mat-dialog-actions>
 
 <div>
-
 </div>

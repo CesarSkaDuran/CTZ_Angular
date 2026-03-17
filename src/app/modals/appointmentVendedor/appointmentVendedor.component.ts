@@ -221,7 +221,7 @@ export class AppointmentVendedorComponent implements OnInit, AfterViewInit, OnDe
             (response: any) => {
                 this.sending = false;
 
-                this.close(data);
+                // this.close(data);
                 //  this.router.navigate(['/app/home']);
                 this.snackBar.open('Guardado', null, {
                     duration: 4000

@@ -452,7 +452,7 @@ loadBloqueo(){
                 console.log("Appointment recién creado:");
                 console.log(response.data.createAppointmentCtz.id);
                 this.saveCredito(response.data.createAppointmentCtz.id, data.valor);
-                this.close(data);
+                // this.close(data);
 
                 this.snackBar.open('Guardado', null, {
                     duration: 4000
