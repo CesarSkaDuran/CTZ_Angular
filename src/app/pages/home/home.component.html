@@ -268,8 +268,13 @@
                                     <mat-icon [icIcon]="baselineOpenInNew" color="primary"></mat-icon>
                                 </button>
 
-                                <button *ngIf="this.role != 'consulta'" mat-icon-button type="button" (click)="delete(row)">
-                                    <mat-icon [icIcon]="baselineDeleteForever" color="red"></mat-icon>
+                                <button 
+                                *ngIf="role == 'Administrador' || role == 'Programador'" 
+                                mat-icon-button 
+                                type="button" 
+                                (click)="delete(row)">
+                                    
+                                <mat-icon [icIcon]="baselineDeleteForever" color="red"></mat-icon>
                                 </button>
                             </div>
                         </td>
