@@ -96,6 +96,13 @@
                         <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
 
+                    <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%;"
+                        class="bold-form" floatLabel="always">
+                        <mat-label>Observación</mat-label>
+                        <input matInput formControlName="observaciones" placeholder="remis, remision, remisionado..."
+                            autocomplete="off" />
+                    </mat-form-field>
+
                     <div appearance="outline" fxFlexAlign.xs="stretch" style="width: 100%; display: flex;" class="blue no-pad bold-form" floatLabel="always">
 
 
@@ -126,6 +133,14 @@
 
             <div style="margin: 20px;"
                 [ngStyle]="{'display': userPermisoStatus() == 2 ?  'none' : userPermisoStatus() == 0 ? 'none' : '' }">
+
+                <div fxLayout="row" fxLayoutAlign="end center" class="mb-2">
+                    <button *ngIf="(role == 'Administrador' || role == 'Programador') && filters.value.observaciones"
+                        mat-flat-button color="warn" (click)="deleteFiltered()">
+                        Eliminar filtrados
+                    </button>
+                </div>
+
                 <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
 
                   
@@ -280,9 +295,9 @@
                         </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackById"></tr>
                 </table>
-                <div [hidden]="datosAppointment.length > 0" class="pt-9 pb-9">
+                <div [hidden]="data.length > 0 || loadingRecords" class="pt-9 pb-9">
                     <div class="alternate-result">
                         <div fxLayout="row" fxFlex fxLayoutAlign="center center">
                             <div [hidden]="!loadingRecords">
@@ -291,7 +306,7 @@
                                     <span>CARGANDO</span>
                                 </div>
                             </div>
-                            <div [hidden]="cantidad_citas > 0">
+                            <div [hidden]="resultsLength > 0 || loadingRecords">
                                 <div fxLayout="column" fxLayoutAlign="center center">
                                     <span class="text-secondary headline-1">NO HAY CITAS PROGRAMADAS</span>
                                 </div>
@@ -488,7 +503,7 @@
                         </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackById"></tr>
                 </table>
                 <div [hidden]="dataUser.length > 0" class="pt-9 pb-9">
                     <div class="alternate-result">

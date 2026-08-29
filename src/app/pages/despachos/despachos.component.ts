@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/api/api.service';
 import { CoreService } from 'src/app/core/core.service';
 import { EstadoDespachoComponent } from 'src/app/modals/estadoDespacho/estado-despacho.component';
@@ -32,12 +33,14 @@ export class DespachosComponent implements OnInit {
   public keyUp = new Subject<any>();
   nombre_conductor:any;
   id_usuario:any;
+  role: any;
 
   constructor(private apiService: ApiService, private _snackBar: MatSnackBar,public dialog: MatDialog,
     private coreService: CoreService) { }
 
   filters = new FormGroup({
     search: new FormControl('', []),
+    observaciones: new FormControl('', []),
     date: new FormControl('', []),
     date2: new FormControl('', []),
   });
@@ -87,33 +90,29 @@ export class DespachosComponent implements OnInit {
 
   loadAppointmentPaginator() {
     this.loadingRecords = true;
-    const date =`date: "${moment().format('YYYY-MM-DD')}",`;
-    const date2 =`date2: "${moment().format('YYYY-MM-DD')}",`;
+    const date = this.filters.value.date && this.filters.value.date !== ''
+        ? `date: "${moment(this.filters.value.date).format('YYYY-MM-DD')}",`
+        : `date: "${moment().format('YYYY-MM-DD')}",`;
+    const date2 = this.filters.value.date2 && this.filters.value.date2 !== ''
+        ? `date2: "${moment(this.filters.value.date2).format('YYYY-MM-DD')}",`
+        : `date2: "${moment().format('YYYY-MM-DD')}",`;
     const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
+    const observacionesText = this.filters.value.observaciones ? `observaciones: "${this.filters.value.observaciones}",` : '';
     const aprobado = `aprobado: 2`;
 
     var conductor = ' ';
-
-    console.log("Este es el rol de usuario:");
-    console.log(this.rolUsuario());
 
     if(this.rolUsuario()==7){
         conductor = this.nombreConductor() !== '' && this.nombreConductor() != null && this.nombreConductor() != undefined ? `conductor: "${this.nombreConductor()}",` : 'conductor: ".",';
     }
     
 
-    const queryParams = `limit: ${this.limit}, ${conductor} offset: ${this.offset},${date} ${date2} ${searchText} ${aprobado}`;
-
-    console.log("Este es el queryparams:");
-    console.log(queryParams);
+    const queryParams = `limit: ${this.limit}, ${conductor} offset: ${this.offset},${date} ${date2} ${searchText} ${observacionesText} ${aprobado}`;
 
     
 
     const queryProps =
         'data{id, name, company, estado_despacho, hora_llegada, hora_despacho, hora_descargue, hora_fin, observaciones, value, date, app_user_id, updated_at, patient_id, tipo_descarga, time, end_time, conductor, vendedor, metros, type_concreto, direccion, status, type, email_confirmation, phone_confirmation, reason, type, patient{ id, name, color  }, doctor{ id, name, } }, total';
-
-    console.log("------------------------------------Queryprops-------------------------------------");
-    console.log(queryProps);
 
     this.apiService.getAppointmentPagination(queryParams, queryProps).subscribe(
         (response: any) => {
@@ -343,6 +342,10 @@ dateChange(event: any) {
     this.dataSource = new MatTableDataSource();
 }
 
+trackById(index: number, item: any): any {
+    return item ? item.id : null;
+}
+
 
   ngOnInit(): void {
     console.log("Este es el momento:");
@@ -351,8 +354,76 @@ dateChange(event: any) {
     this.ocultarTablas();
 
     this.id_usuario=this.coreService.currentUser.id;
+    this.role = this.coreService.currentUser.role.role;
 
     this.userNombreRoleId();
+
+    this.filters.controls.observaciones.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        this.offset = 0;
+        this.loadAppointmentPaginator();
+      });
+  }
+
+  deleteFiltered() {
+    const role = this.coreService.currentUser ? this.coreService.currentUser.role.role : null;
+    if (role !== 'Administrador' && role !== 'Programador') {
+      this._snackBar.open('No tiene permisos para esta acción.', null, {
+        duration: 4000
+      });
+      return;
+    }
+
+    if (!this.filters.value.observaciones) {
+      this._snackBar.open('Ingrese un filtro de observación.', null, {
+        duration: 4000
+      });
+      return;
+    }
+
+    const r = confirm('Se eliminarán todos los pedidos que coincidan con la observación y fechas seleccionadas. ¿Continuar?');
+    if (r === true) {
+      this.loadingRecords = true;
+
+      const date = `date: "${this.filters.value.date ? moment(this.filters.value.date).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')}",`;
+      const date2 = `date2: "${this.filters.value.date2 ? moment(this.filters.value.date2).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')}",`;
+      const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
+      const observacionesText = this.filters.value.observaciones ? `observaciones: "${this.filters.value.observaciones}",` : '';
+      const aprobado = `aprobado: 2,`;
+
+      var conductor = ' ';
+      if (this.rolUsuario() == 7) {
+        conductor = this.nombreConductor() !== '' && this.nombreConductor() != null && this.nombreConductor() != undefined
+          ? `conductor: "${this.nombreConductor()}",`
+          : 'conductor: ".",';
+      }
+
+      const queryParams = `${conductor} ${date} ${date2} ${searchText} ${observacionesText} ${aprobado} delete: 1`;
+      const queryProps = 'id';
+
+      this.apiService.deleteAppointment(queryParams, queryProps).subscribe(
+        (response: any) => {
+          this.loadingRecords = false;
+          const eliminados = response.data.deleteAppointment ? response.data.deleteAppointment.id : 0;
+          this._snackBar.open(`${eliminados} pedidos eliminados.`, null, {
+            duration: 4000
+          });
+          this.loadAppointmentPaginator();
+          this.dataSource = new MatTableDataSource();
+        },
+        error => {
+          this.loadingRecords = false;
+          this._snackBar.open('Error al eliminar.', null, {
+            duration: 4000
+          });
+          console.log(error);
+        }
+      );
+    }
   }
 
 }

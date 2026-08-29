@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
     pageSize = 10;
     pageSizeOptions: number[] = [10, 50, 100, 150, 200];
     orderBy = 'time';
-    order = 'upward';
+    order = 'asc';
     limit = 10;
     offset = 0;
     cantidad_citas:any;
@@ -85,6 +85,7 @@ export class HomeComponent implements OnInit {
     loadingPropect: boolean;
     filters = new FormGroup({
         search: new FormControl('', []),
+        observaciones: new FormControl('', []),
         date: new FormControl('', []),
         date2: new FormControl('', []),
     });
@@ -142,9 +143,19 @@ export class HomeComponent implements OnInit {
                 this.filters.controls.search.setValue(this.searchEl.nativeElement.value);
                 this.loadAppointmentPaginator();
                 this.loadAppointmentPaginatorUser();
-                this.loadAppointment_2();
-                this.datosAppointment;
             });
+
+        const observacionesSubscription = this.filters.controls.observaciones.valueChanges
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged()
+            )
+            .subscribe(() => {
+                this.offset = 0;
+                this.loadAppointmentPaginator();
+                this.loadAppointmentPaginatorUser();
+            });
+
         var usuarioJSON = localStorage.getItem('current_user');
         var usuario = JSON.parse(usuarioJSON);
         this.usuario = usuario
@@ -357,7 +368,8 @@ export class HomeComponent implements OnInit {
         const conductor = this.userRole()==7 && this.conductorName() ? `conductor:"${this.conductorName()}"`:``;
 
         const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
-        const queryParams = `limit: ${this.limit}, offset: ${this.offset}, orderby: "${this.orderBy}", order: "${this.order}", ${searchText} ${date} ${date2} ${aprobado} ${conductor}`;
+        const observacionesText = this.filters.value.observaciones ? `observaciones: "${this.filters.value.observaciones}",` : '';
+        const queryParams = `limit: ${this.limit}, offset: ${this.offset}, orderby: "${this.orderBy}", order: "${this.order}", ${searchText} ${observacionesText} ${date} ${date2} ${aprobado} ${conductor}`;
 
         console.log("QUERYPARAMS------------------------------------------------------------------------:");
         console.log(queryParams);
@@ -460,7 +472,8 @@ export class HomeComponent implements OnInit {
                 ? `date2: "${moment(this.filters.value.date2).format('YYYY-MM-DD')}",`
                 : `date2: "${moment().format('YYYY-MM-DD')}",`;
         const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
-        const queryParams = `limit: ${this.limit}, offset: ${this.offset}, orderby: "${this.orderBy}", order: "${this.order}", ${searchText} ${date} ${date2}`;
+        const observacionesText = this.filters.value.observaciones ? `observaciones: "${this.filters.value.observaciones}",` : '';
+        const queryParams = `limit: ${this.limit}, offset: ${this.offset}, orderby: "${this.orderBy}", order: "${this.order}", ${searchText} ${observacionesText} ${date} ${date2}`;
         const queryProps =
             'data{ id, name, company, value, date, patient_id, updated_at, time, end_time, tipo_descarga, observaciones, conductor, vendedor, metros, type_concreto, direccion, status, type, email_confirmation, phone_confirmation, reason, coordenadas, imagen, patient{ id, name, color  }, doctor{ id, name, } }, total';
 
@@ -574,7 +587,6 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        
         if(this.userRole()==8){
             this.router.navigate(['/app/panelcliente']);
         }
@@ -586,17 +598,11 @@ export class HomeComponent implements OnInit {
 
 
         this.ocultarTablas();
-        console.log("Cargando los appointments");
         this.loadAppointmentPaginator();
-        this.loadAppointmentPaginator();
-        console.log("Fin de los appointments");
         this.loadBloqueo();
-        this.dataBloqueo;
         this.loadAppointmentPaginatorUser();
         this.loadAppointment_2();
         this.mesActual();
-        this.dataPersona;
-        console.log('esto es para mostrar datos', this.dataSourceUser)
         this.dataSource = new MatTableDataSource();
         this.dataAppointment = new MatTableDataSource();
         this.dataSourceUser = new MatTableDataSource();
@@ -612,20 +618,16 @@ export class HomeComponent implements OnInit {
 
     sortRecords(event: MatSort): void {
         this.orderBy = event.active;
-        this.order = event.direction;
-        this.loadAppointmentPaginatorUser();
-        this.loadAppointment_2();
-        this.datosAppointment;
+        this.order = event.direction || 'asc';
         this.loadAppointmentPaginator();
+        this.loadAppointmentPaginatorUser();
     }
 
     pageChange(event: PageEvent) {
         this.limit = event.pageSize;
         this.offset = event.pageSize * event.pageIndex;
-        this.loadAppointment_2();
-        this.datosAppointment;
-        this.loadAppointmentPaginatorUser();
         this.loadAppointmentPaginator();
+        this.loadAppointmentPaginatorUser();
     }
     searchKeyUp($event: KeyboardEvent): void {
         console.log($event);
@@ -639,9 +641,11 @@ export class HomeComponent implements OnInit {
 
     dateChange(event: any) {
         this.loadAppointmentPaginator();
-        this.loadAppointment_2();
-        this.datosAppointment;
         this.loadAppointmentPaginatorUser();
+    }
+
+    trackById(index: number, item: any): any {
+        return item ? item.id : null;
     }
 
     editUser(user: any) {
@@ -708,6 +712,63 @@ export class HomeComponent implements OnInit {
                         duration: 4000
                     });
 
+                    console.log(error);
+                }
+            );
+        }
+    }
+
+    deleteFiltered() {
+        if (this.role !== 'Administrador' && this.role !== 'Programador') {
+            this._snackBar.open('No tiene permisos para esta acción.', null, {
+                duration: 4000
+            });
+            return;
+        }
+
+        if (!this.filters.value.observaciones) {
+            this._snackBar.open('Ingrese un filtro de observación.', null, {
+                duration: 4000
+            });
+            return;
+        }
+
+        const r = confirm('Se eliminarán todos los pedidos que coincidan con la observación y fechas seleccionadas. ¿Continuar?');
+        if (r === true) {
+            this.loadingRecords = true;
+
+            const date =
+                this.filters.value.date !== '' && this.filters.value.date !== null && this.filters.value.date2 !== undefined
+                    ? `date: "${moment(this.filters.value.date).format('YYYY-MM-DD')}",`
+                    : `date: "${moment().format('YYYY-MM-DD')}",`;
+            const date2 =
+                this.filters.value.date2 !== '' && this.filters.value.date2 !== null && this.filters.value.date2 !== undefined
+                    ? `date2: "${moment(this.filters.value.date2).format('YYYY-MM-DD')}",`
+                    : `date2: "${moment().format('YYYY-MM-DD')}",`;
+            const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
+            const observacionesText = this.filters.value.observaciones ? `observaciones: "${this.filters.value.observaciones}",` : '';
+            const aprobado = `aprobado: 2,`;
+            const conductor = this.userRole()==7 && this.conductorName() ? `conductor:"${this.conductorName()}",` : '';
+
+            const queryParams = `${searchText} ${observacionesText} ${date} ${date2} ${aprobado} ${conductor} delete: 1`;
+            const queryProps = 'id';
+
+            this.apiService.deleteAppointment(queryParams, queryProps).subscribe(
+                (response: any) => {
+                    this.loadingRecords = false;
+                    const eliminados = response.data.deleteAppointment ? response.data.deleteAppointment.id : 0;
+                    this._snackBar.open(`${eliminados} pedidos eliminados.`, null, {
+                        duration: 4000
+                    });
+                    this.loadAppointmentPaginator();
+                    this.loadAppointmentPaginatorUser();
+                    this.loadAppointment_2();
+                },
+                error => {
+                    this.loadingRecords = false;
+                    this._snackBar.open('Error al eliminar.', null, {
+                        duration: 4000
+                    });
                     console.log(error);
                 }
             );

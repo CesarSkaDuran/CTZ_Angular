@@ -29,11 +29,26 @@
               <input matInput  #search placeholder="Nombre del  Cliente..."
                   formControlName="search" (keyup)="searchKeyUp($event)"/>
           </mat-form-field>
+
+          <mat-form-field appearance="outline" fxFlexAlign.xs="stretch" class="bold-form"
+              floatLabel="always">
+              <mat-label>Observación</mat-label>
+              <input matInput formControlName="observaciones" placeholder="remis, remision, remisionado..."
+                  autocomplete="off" />
+          </mat-form-field>
         </form>
 
         </div>
 
         <div class="cont-tabla">
+
+            <div fxLayout="row" fxLayoutAlign="end center" class="mb-2">
+                <button *ngIf="(role == 'Administrador' || role == 'Programador') && filters.value.observaciones"
+                    mat-flat-button color="warn" (click)="deleteFiltered()">
+                    Eliminar filtrados
+                </button>
+            </div>
+
             <table @stagger class="w-full"  mat-table
                 matSort [dataSource]="dataSource">
                 <ng-container matColumnDef="id_pedido">
@@ -93,7 +108,7 @@
                 </ng-container>
   
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackById"></tr>
             </table>
           </div>
   
